@@ -1,0 +1,41 @@
+[gd_scene load_steps=7 format=3 uid="uid://bi6jeqml44w13"]
+
+[ext_resource type="PackedScene" uid="uid://cqwqwvltr321v" path="res://characters/player/player.tscn" id="1_rup2k"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_j57gt"]
+size = Vector3(15, 1, 15)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_j57gt"]
+points = PackedVector3Array(-7.619047, -0.61904764, -7.619048, 7.619047, 0.57142854, 7.619048, 7.619047, -0.61904764, 7.619048, 7.619047, 0.57142854, -7.619048, -7.619047, 0.57142854, 7.619048, -7.619047, -0.61904764, 7.619048, 7.619047, -0.61904764, -7.619048, -7.619047, 0.57142854, -7.619048)
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_rup2k"]
+
+[sub_resource type="Sky" id="Sky_pgvl5"]
+sky_material = SubResource("ProceduralSkyMaterial_rup2k")
+
+[sub_resource type="Environment" id="Environment_lm2rq"]
+background_mode = 2
+sky = SubResource("Sky_pgvl5")
+ambient_light_source = 3
+
+[node name="Level0" type="Node3D"]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_j57gt")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
+shape = SubResource("ConvexPolygonShape3D_j57gt")
+
+[node name="CharacterBody3D" parent="." instance=ExtResource("1_rup2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2971659, 2.8476198, 2.6798615)
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0201867, 2.2895575, 6.81603)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_lm2rq")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 12.447183, 0)
