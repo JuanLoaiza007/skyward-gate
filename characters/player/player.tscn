@@ -6,7 +6,7 @@
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_508ok"]
 
-[node name="CharacterBody3D" type="CharacterBody3D"]
+[node name="Player" type="CharacterBody3D"]
 script = ExtResource("1_508ok")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
@@ -14,3 +14,12 @@ mesh = SubResource("CapsuleMesh_b886q")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_508ok")
+
+[node name="CameraPivot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.99502265, 0.09964972, 0, -0.09964972, 0.99502265, 0, 1.1187296, 1.48329)
+
+[node name="SpringArm3D" type="SpringArm3D" parent="CameraPivot"]
+
+[node name="Camera3D" type="Camera3D" parent="CameraPivot/SpringArm3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 2.2351742e-08, 0, -2.2351742e-08, 1, 0, 0.14437199, 0.089402676)
+fov = 73.88549
