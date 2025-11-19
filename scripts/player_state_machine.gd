@@ -73,7 +73,6 @@ func update_state(on_floor: bool, velocity_y: float, input_dir: Vector2, is_run_
 
 	if new_state != current_state:
 		current_state = new_state
-		print("Estado actual: ", State.keys()[current_state])
 		var anim_name = animation_names[new_state]
 		if animation_player.has_animation(anim_name):
 			animation_player.get_animation(anim_name).loop_mode = Animation.LOOP_LINEAR
@@ -81,7 +80,6 @@ func update_state(on_floor: bool, velocity_y: float, input_dir: Vector2, is_run_
 
 func update_state_forced(new_state: State) -> void:
 	current_state = new_state
-	print("Estado forzado: ", State.keys()[current_state])
 	var anim_name = animation_names[new_state]
 	if animation_player.has_animation(anim_name):
 		if new_state == State.ATTACKING:

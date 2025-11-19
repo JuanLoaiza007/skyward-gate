@@ -10,10 +10,12 @@ const FALL_DEATH_HEIGHT = -20.0
 @onready var camera = $CameraPivot
 @onready var foot_raycast = $FootRayCast
 @onready var footsteps_audio = $FootstepsAudio
+@onready var actions_audio = $ActionsAudio
 var state_machine: PlayerStateMachine
 var initial_position: Vector3
 @onready var grass_sound = load("res://assets/audio/sfx/gravel_footsteps.mp3")
 @onready var concrete_sound = load("res://assets/audio/sfx/concrete_footsteps.mp3")
+@onready var attacking = load("res://assets/audio/sfx/cat_attack.wav")
 
 func _ready() -> void:
 	add_to_group("player")
@@ -29,22 +31,15 @@ func _physics_process(delta: float) -> void:
 	var is_run_pressed = Input.is_action_pressed("KEY_SHIFT")
 	var was_falling = velocity.y < 0 and not is_on_floor()
 
-	# Manejo de acciones que interrumpen el flujo de estados de movimiento/reposo
 	if Input.is_action_pressed("KEY_Q"):
-		# Transición inmediata al estado de BAILE. Se mantiene mientras se presiona la tecla
 		if state_machine.current_state != PlayerStateMachine.State.DANCING:
 			state_machine.update_state_forced(PlayerStateMachine.State.DANCING)
-		return # Si baila, no se mueve
-
-	# La lógica de ataque se maneja en _input ya que es un evento de un solo clic
-	# La máquina de estados necesita saber si el player está atacando.
-	# Como la máquina de estados no maneja el ataque por sí misma, se actualiza al final
+		return
 
 	movement(delta, direction, is_run_pressed)
 	move_and_slide()
 
 	var on_floor_now = is_on_floor()
-	# Pasa toda la información relevante a la máquina de estados para que decida el estado base (movimiento, salto, reposo)
 	state_machine.update_state(on_floor_now, velocity.y, input_dir, is_run_pressed, was_falling)
 	
 	update_footsteps_sound()
@@ -62,13 +57,12 @@ func _input(event: InputEvent) -> void:
 	# Detección de ataque
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
 		state_machine.update_state_forced(PlayerStateMachine.State.ATTACKING)
+		actions_audio.stream = attacking
+		actions_audio.play()
 
 func movement(delta: float, direction: Vector3, is_run_pressed: bool) -> void:
-	# Si el estado es de "no-movimiento" (ataque, baile, muerte), el player no debería moverse,
-	# excepto si la animación de ataque/baile permite el movimiento. Asumimos que no lo permite por defecto.
 	if state_machine.current_state == PlayerStateMachine.State.ATTACKING or \
 	   state_machine.current_state == PlayerStateMachine.State.DANCING:
-		# Aplica gravedad pero detiene el movimiento horizontal
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 		velocity.z = move_toward(velocity.z, 0, SPEED)
 		if not is_on_floor():
@@ -91,10 +85,9 @@ func movement(delta: float, direction: Vector3, is_run_pressed: bool) -> void:
 		velocity.x = direction.x * speed
 		velocity.z = direction.z * speed
 	else:
-		velocity.x = move_toward(velocity.x, 0, speed) # Usa 'speed' aquí también
-		velocity.z = move_toward(velocity.z, 0, speed) # Usa 'speed' aquí también
+		velocity.x = move_toward(velocity.x, 0, speed)
+		velocity.z = move_toward(velocity.z, 0, speed)
 
-# La máquina de estados ya determina si es WALKING o RUNNING implícitamente por la velocidad
 func is_player_moving_horizontally() -> bool:
 	var horizontal_velocity_squared = velocity.x * velocity.x + velocity.z * velocity.z
 	return horizontal_velocity_squared > 0.1 * 0.1 # Umbral pequeño
@@ -104,7 +97,6 @@ func update_footsteps_sound() -> void:
 	var collider = foot_raycast.get_collider()
 	var current_surface = ""
 	
-	# Determina si el player está en un estado de movimiento horizontal
 	var is_walking_state = [
 		PlayerStateMachine.State.WALKING_FORWARD,
 		PlayerStateMachine.State.WALKING_BACKWARD,
@@ -114,7 +106,6 @@ func update_footsteps_sound() -> void:
 	].has(state_machine.current_state)
 
 	if is_walking_state and is_on_floor():
-		# Detección de superficie y sonido
 		if collider:
 			if collider.is_in_group("concrete_surface"):
 				current_surface = "concrete"
@@ -143,7 +134,6 @@ func update_footsteps_sound() -> void:
 			if not footsteps_audio.playing:
 				footsteps_audio.play()
 		else:
-			# Si se mueve pero la superficie no es reconocida, detener el sonido o usar un sonido por defecto
 			footsteps_audio.stop()
 	else:
 		footsteps_audio.stop()

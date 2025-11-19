@@ -3794,6 +3794,8 @@ fov = 70.57327
 
 [node name="FootstepsAudio" type="AudioStreamPlayer3D" parent="."]
 
+[node name="ActionsAudio" type="AudioStreamPlayer3D" parent="."]
+
 [node name="Cat" type="Node3D" parent="."]
 transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, -0.7381656, 0)
 
