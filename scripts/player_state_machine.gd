@@ -45,6 +45,9 @@ func _on_animation_finished(anim_name: String):
 		update_state_forced(State.IDLE)
 
 func update_state(on_floor: bool, velocity_y: float, input_dir: Vector2, is_run_pressed: bool, was_falling: bool) -> void:
+	if current_state == State.DANCING:
+		return
+
 	var new_state: State
 
 	if on_floor:
@@ -83,7 +86,9 @@ func update_state_forced(new_state: State) -> void:
 	var anim_name = animation_names[new_state]
 	if animation_player.has_animation(anim_name):
 		if new_state == State.ATTACKING:
+			animation_player.stop()
 			animation_player.get_animation(anim_name).loop_mode = Animation.LOOP_NONE
+			animation_player.play(anim_name, 0.2, 2.0)
 		else:
 			animation_player.get_animation(anim_name).loop_mode = Animation.LOOP_LINEAR
-		animation_player.play(anim_name, 0.2)
+			animation_player.play(anim_name, 0.2)

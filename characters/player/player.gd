@@ -15,7 +15,7 @@ var state_machine: PlayerStateMachine
 var initial_position: Vector3
 @onready var grass_sound = load("res://assets/audio/sfx/gravel_footsteps.mp3")
 @onready var concrete_sound = load("res://assets/audio/sfx/concrete_footsteps.mp3")
-@onready var attacking = load("res://assets/audio/sfx/cat_attack.wav")
+@onready var attacking = load("res://assets/audio/sfx/sword-slice-distorted.wav")
 
 func _ready() -> void:
 	add_to_group("player")
@@ -31,10 +31,9 @@ func _physics_process(delta: float) -> void:
 	var is_run_pressed = Input.is_action_pressed("KEY_SHIFT")
 	var was_falling = velocity.y < 0 and not is_on_floor()
 
-	if Input.is_action_pressed("KEY_Q"):
+	if Input.is_action_pressed("KEY_Q") and is_on_floor():
 		if state_machine.current_state != PlayerStateMachine.State.DANCING:
 			state_machine.update_state_forced(PlayerStateMachine.State.DANCING)
-		return
 
 	movement(delta, direction, is_run_pressed)
 	move_and_slide()
@@ -61,14 +60,13 @@ func _input(event: InputEvent) -> void:
 		actions_audio.play()
 
 func movement(delta: float, direction: Vector3, is_run_pressed: bool) -> void:
-	if state_machine.current_state == PlayerStateMachine.State.ATTACKING or \
-	   state_machine.current_state == PlayerStateMachine.State.DANCING:
+	if state_machine.current_state == PlayerStateMachine.State.DANCING:
 		velocity.x = move_toward(velocity.x, 0, SPEED)
 		velocity.z = move_toward(velocity.z, 0, SPEED)
 		if not is_on_floor():
 			velocity += get_gravity() * delta
 		return
-		
+
 	# Add the gravity.
 	if not is_on_floor():
 		velocity += get_gravity() * delta
