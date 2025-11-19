@@ -1,12 +1,26 @@
-[gd_scene load_steps=7 format=3 uid="uid://bi6jeqml44w13"]
+[gd_scene load_steps=10 format=3 uid="uid://bi6jeqml44w13"]
 
-[ext_resource type="PackedScene" uid="uid://cqwqwvltr321v" path="res://characters/player/player.tscn" id="1_rup2k"]
+[ext_resource type="PackedScene" uid="uid://c5snqxgqbp4s1" path="res://characters/player/player.tscn" id="1_rup2k"]
+
+[sub_resource type="GDScript" id="GDScript_rup2k"]
+script/source = "extends Node3D
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	$Platform1/StaticBody3D.add_to_group(\"concrete_surface\")
+	$Platform2/StaticBody3D.add_to_group(\"grass_surface\")
+	pass
+"
 
 [sub_resource type="BoxMesh" id="BoxMesh_j57gt"]
 size = Vector3(15, 1, 15)
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_j57gt"]
 points = PackedVector3Array(-7.619047, -0.61904764, -7.619048, 7.619047, 0.57142854, 7.619048, 7.619047, -0.61904764, 7.619048, 7.619047, 0.57142854, -7.619048, -7.619047, 0.57142854, 7.619048, -7.619047, -0.61904764, 7.619048, 7.619047, -0.61904764, -7.619048, -7.619047, 0.57142854, -7.619048)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_rup2k"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_rup2k"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_rup2k"]
 
@@ -19,14 +33,24 @@ sky = SubResource("Sky_pgvl5")
 ambient_light_source = 3
 
 [node name="Level0" type="Node3D"]
+script = SubResource("GDScript_rup2k")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+[node name="Platform1" type="MeshInstance3D" parent="."]
 mesh = SubResource("BoxMesh_j57gt")
 
-[node name="StaticBody3D" type="StaticBody3D" parent="MeshInstance3D"]
+[node name="StaticBody3D" type="StaticBody3D" parent="Platform1"]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="MeshInstance3D/StaticBody3D"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Platform1/StaticBody3D"]
 shape = SubResource("ConvexPolygonShape3D_j57gt")
+
+[node name="Platform2" type="MeshInstance3D" parent="."]
+transform = Transform3D(3, 0, 0, 0, 0.2, 0, 0, 0, 3, 0, 0.53058624, 0)
+mesh = SubResource("CylinderMesh_rup2k")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Platform2"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Platform2/StaticBody3D"]
+shape = SubResource("CylinderShape3D_rup2k")
 
 [node name="CharacterBody3D" parent="." instance=ExtResource("1_rup2k")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2971659, 2.8476198, 2.6798615)
