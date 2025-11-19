@@ -1,6 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://bi6jeqml44w13"]
+[gd_scene load_steps=11 format=3 uid="uid://bi6jeqml44w13"]
 
 [ext_resource type="PackedScene" uid="uid://c5snqxgqbp4s1" path="res://characters/player/player.tscn" id="1_rup2k"]
+[ext_resource type="PackedScene" uid="uid://cd5vqgevfy0rp" path="res://game_components/collectables/collectable.tscn" id="2_pgvl5"]
 
 [sub_resource type="GDScript" id="GDScript_rup2k"]
 script/source = "extends Node3D
@@ -63,3 +64,6 @@ environment = SubResource("Environment_lm2rq")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 12.447183, 0)
+
+[node name="Collectable" parent="." instance=ExtResource("2_pgvl5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7454909, 0.5714284, 5.4742365)
