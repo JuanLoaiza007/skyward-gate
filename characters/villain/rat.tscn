@@ -1,0 +1,43 @@
+[gd_scene load_steps=6 format=3 uid="uid://clickemutierw"]
+
+[ext_resource type="PackedScene" uid="uid://qwxmiioh5f1w" path="res://assets/models/characters/villians/rat.blend" id="1_s1kt0"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_s1kt0"]
+radius = 0.93359375
+height = 3.4401855
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_s1kt0"]
+radius = 10.0
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_muup6"]
+radius = 2.3169363
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1tobf"]
+size = Vector3(2.961945, 1.6354332, 0.9386902)
+
+[node name="Rat" instance=ExtResource("1_s1kt0")]
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
+
+[node name="Plane" parent="." index="0"]
+transform = Transform3D(1.1924881e-08, 0, 1, 0, 1, 0, -1, 0, 1.1924881e-08, 0, 0, 0)
+
+[node name="BodyCollision" type="CollisionShape3D" parent="." index="1"]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, -0.1834774, 0.87838554, 0)
+shape = SubResource("CapsuleShape3D_s1kt0")
+
+[node name="VisionArea" type="Area3D" parent="." index="2"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="VisionArea" index="0"]
+shape = SubResource("SphereShape3D_s1kt0")
+
+[node name="AttackArea" type="Area3D" parent="." index="3"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="AttackArea" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8735132, 0)
+shape = SubResource("SphereShape3D_muup6")
+
+[node name="DamageArea" type="Area3D" parent="." index="4"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DamageArea" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.09870982, 0.80444765, -0.044387817)
+shape = SubResource("BoxShape3D_1tobf")
