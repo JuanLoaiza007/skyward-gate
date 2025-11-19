@@ -11,6 +11,7 @@ const CAMERA_SENSIBILITY = 0.4
 @onready var footsteps_audio = $FootstepsAudio
 @onready var actions_audio = $ActionsAudio
 @onready var health_component = $HealthComponent
+@onready var game_over_ui = $CanvasLayer
 var state_machine: PlayerStateMachine
 var initial_position: Vector3
 var is_dead = false
@@ -26,6 +27,7 @@ func _ready() -> void:
 	state_machine = PlayerStateMachine.new()
 	add_child(state_machine)
 	state_machine.name = "StateMachine"
+	game_over_ui.visible = false
 	# Load health from game state
 	if GameStateManager:
 		GameStateManager.load()
@@ -70,6 +72,11 @@ func _physics_process(delta: float) -> void:
 
 func _input(event: InputEvent) -> void:
 	if is_dead:
+		if event.is_action_pressed("ui_accept"):
+			# Restablecer salud si usas GameStateManager para evitar bucle de muerte al reiniciar
+			if GameStateManager:
+				GameStateManager.game_data[GameStateManager.GAME_DATA.PLAYER_HEALTH] = 3
+			get_tree().reload_current_scene()
 		return
 	if event is InputEventMouseMotion:
 		rotate_y(deg_to_rad(-event.relative.x * CAMERA_SENSIBILITY)) # X: on the screen horizontal
@@ -169,6 +176,7 @@ func _on_damaged(amount: int, source_point: Vector3) -> void:
 
 func _on_died() -> void:
 	is_dead = true
+	game_over_ui.visible = true # Mostrar UI
 	var death_state = PlayerStateMachine.State.DEATH_FORWARD
 	if last_damage_source.x < global_position.x:
 		death_state = PlayerStateMachine.State.DEATH_BACKWARD
