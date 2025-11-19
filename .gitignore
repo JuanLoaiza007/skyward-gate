@@ -2,12 +2,15 @@
 .vs/
 .vscode/
 *.uid
+*.tmp
+*.blend1
 
 # Godot 4+ specific ignores
 .godot/
 .nomedia
 
 # Godot-specific ignores
+*.import
 .import/
 export.cfg
 export_credentials.cfg
