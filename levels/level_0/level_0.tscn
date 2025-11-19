@@ -54,7 +54,7 @@ mesh = SubResource("CylinderMesh_rup2k")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Platform2/StaticBody3D"]
 shape = SubResource("CylinderShape3D_rup2k")
 
-[node name="CharacterBody3D" parent="." instance=ExtResource("1_rup2k")]
+[node name="Player" parent="." instance=ExtResource("1_rup2k")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2971659, 2.8476198, 2.6798615)
 
 [node name="Camera3D" type="Camera3D" parent="."]
@@ -66,7 +66,7 @@ environment = SubResource("Environment_lm2rq")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 12.447183, 0)
 
-[node name="Villain" parent="." instance=ExtResource("2_pgvl5")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5332427, 0.6266435, -6.32283)
-
 [node name="HealthUI" parent="." instance=ExtResource("3_health_ui")]
+
+[node name="Villain" parent="." instance=ExtResource("2_pgvl5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5573325, 0.6266435, 1.5486636)

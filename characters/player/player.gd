@@ -168,6 +168,11 @@ func _on_health_changed(new_health: int) -> void:
 
 func _on_damaged(amount: int, source_point: Vector3) -> void:
 	last_damage_source = source_point
+	# Apply knockback
+	var direction = (global_position - source_point).normalized()
+	velocity.x = direction.x * 40
+	velocity.z = direction.z * 40
+	velocity.y = 6
 
 func _on_died() -> void:
 	is_dead = true

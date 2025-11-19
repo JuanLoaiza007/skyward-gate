@@ -23,6 +23,8 @@ var current_state: State = State.IDLE
 var initial_position: Vector3
 var target: Node3D = null
 var player_in_vision: bool = false
+var can_attack: bool = true
+const ATTACK_DELAY = 1.0
 
 func _ready() -> void:
 	add_to_group("villain")
@@ -104,12 +106,14 @@ func _returning_behavior(delta: float) -> void:
 		current_state = State.IDLE
 
 func _attacking_behavior(delta: float) -> void:
-	print("atacando a jugador")
 	# Aquí lógica de ataque
-	if target and target.has_node("HealthComponent") and target.get_node("HealthComponent").is_alive():
+	if can_attack and target and target.has_node("HealthComponent") and target.get_node("HealthComponent").is_alive():
+		print("atacando a jugador")
 		target.get_node("HealthComponent").take_damage(1, global_position)
-		# After attack, perhaps return or something, but for now, stay attacking
-	else:
+		can_attack = false
+		get_tree().create_timer(ATTACK_DELAY).timeout.connect(func(): can_attack = true)
+		# Stay attacking
+	elif target and not target.get_node("HealthComponent").is_alive():
 		current_state = State.RETURNING
 
 func _on_vision_body_entered(body: Node3D) -> void:
