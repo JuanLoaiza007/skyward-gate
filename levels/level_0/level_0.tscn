@@ -1,7 +1,8 @@
-[gd_scene load_steps=11 format=3 uid="uid://bi6jeqml44w13"]
+[gd_scene load_steps=12 format=3 uid="uid://bi6jeqml44w13"]
 
 [ext_resource type="PackedScene" uid="uid://c5snqxgqbp4s1" path="res://characters/player/player.tscn" id="1_rup2k"]
 [ext_resource type="PackedScene" uid="uid://bq3ijt1sxibei" path="res://characters/villain/villain.tscn" id="2_pgvl5"]
+[ext_resource type="PackedScene" path="res://ui/health_ui.tscn" id="3_health_ui"]
 
 [sub_resource type="GDScript" id="GDScript_rup2k"]
 script/source = "extends Node3D
@@ -67,3 +68,5 @@ transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 1
 
 [node name="Villain" parent="." instance=ExtResource("2_pgvl5")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5332427, 0.6266435, -6.32283)
+
+[node name="HealthUI" parent="." instance=ExtResource("3_health_ui")]

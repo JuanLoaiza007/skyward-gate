@@ -78,7 +78,7 @@ func _idle_behavior(delta: float) -> void:
 	pass
 
 func _walking_behavior(delta: float) -> void:
-	if target:
+	if target and target.has_node("HealthComponent") and target.get_node("HealthComponent").is_alive():
 		var direction = (target.global_position - global_position).normalized()
 		velocity.x = direction.x * speed
 		velocity.z = direction.z * speed
@@ -87,6 +87,8 @@ func _walking_behavior(delta: float) -> void:
 		# Check distance for attack
 		if global_position.distance_to(target.global_position) < attack_range:
 			current_state = State.ATTACKING
+	else:
+		current_state = State.RETURNING
 
 func _returning_behavior(delta: float) -> void:
 	var distance = global_position.distance_to(initial_position)
@@ -104,6 +106,11 @@ func _returning_behavior(delta: float) -> void:
 func _attacking_behavior(delta: float) -> void:
 	print("atacando a jugador")
 	# Aquí lógica de ataque
+	if target and target.has_node("HealthComponent") and target.get_node("HealthComponent").is_alive():
+		target.get_node("HealthComponent").take_damage(1, global_position)
+		# After attack, perhaps return or something, but for now, stay attacking
+	else:
+		current_state = State.RETURNING
 
 func _on_vision_body_entered(body: Node3D) -> void:
 	if body.is_in_group("player"):
