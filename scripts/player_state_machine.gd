@@ -44,35 +44,35 @@ func _on_animation_finished(anim_name: String):
 	if current_state == State.ATTACKING and anim_name == animation_names[State.ATTACKING]:
 		update_state_forced(State.IDLE)
 
-func update_state(on_floor: bool, velocity_y: float, input_dir: Vector2, is_run_pressed: bool, was_falling: bool) -> void:
-	if current_state == State.DANCING:
-		return
-
+func update_state(on_floor: bool, velocity_y: float, input_dir: Vector2, is_run_pressed: bool, was_falling: bool, is_q_pressed: bool) -> void:
 	var new_state: State
 
-	if on_floor:
-		if was_falling:
-			new_state = State.FALLING_TO_LANDING
-		elif input_dir.length() > 0:
-			if is_run_pressed:
-				new_state = State.RUNNING_FORWARD
-			elif abs(input_dir.x) > abs(input_dir.y):
-				if input_dir.x > 0:
-					new_state = State.WALKING_RIGHT
-				else:
-					new_state = State.WALKING_LEFT
-			else:
-				if input_dir.y < 0:
-					new_state = State.WALKING_FORWARD
-				else:
-					new_state = State.WALKING_BACKWARD
-		else:
-			new_state = State.IDLE
+	if is_q_pressed and on_floor:
+		new_state = State.DANCING
 	else:
-		if velocity_y > 0:
-			new_state = State.JUMPING_UP
+		if on_floor:
+			if was_falling:
+				new_state = State.FALLING_TO_LANDING
+			elif input_dir.length() > 0:
+				if is_run_pressed:
+					new_state = State.RUNNING_FORWARD
+				elif abs(input_dir.x) > abs(input_dir.y):
+					if input_dir.x > 0:
+						new_state = State.WALKING_RIGHT
+					else:
+						new_state = State.WALKING_LEFT
+				else:
+					if input_dir.y < 0:
+						new_state = State.WALKING_FORWARD
+					else:
+						new_state = State.WALKING_BACKWARD
+			else:
+				new_state = State.IDLE
 		else:
-			new_state = State.FALLING_IDLE
+			if velocity_y > 0:
+				new_state = State.JUMPING_UP
+			else:
+				new_state = State.FALLING_IDLE
 
 	if new_state != current_state:
 		current_state = new_state
