@@ -68,7 +68,6 @@ func _on_body_entered(body: Node3D) -> void:
 		# Ocultar el mesh visible
 		diamond_mesh.visible = false
 		# Actualizar estado del juego
-		GameStateManager.add_session_score(score_value)
 		GameStateManager.add_session_item(name + "_" + str(get_instance_id()))
 		# Reproducir sonido de recolección
 		audio_player.play()
