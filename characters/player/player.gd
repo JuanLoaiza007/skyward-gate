@@ -12,6 +12,8 @@ const CAMERA_SENSIBILITY = 0.4
 @onready var actions_audio = $ActionsAudio
 @onready var health_component = $HealthComponent
 @onready var game_over_ui = $CanvasLayer
+@onready var victory_ui = $CanvasLayer2/VictoryControl
+var game_finished = false
 var state_machine: PlayerStateMachine
 var initial_position: Vector3
 var is_dead = false
@@ -68,7 +70,7 @@ func _physics_process(delta: float) -> void:
 		move_and_slide()
 
 func _input(event: InputEvent) -> void:
-	if is_dead:
+	if is_dead or game_finished:
 		if event.is_action_pressed("ui_accept"):
 			# Restablecer salud si usas GameStateManager para evitar bucle de muerte al reiniciar
 			if GameStateManager:
@@ -178,3 +180,11 @@ func _on_died() -> void:
 	if last_damage_source.x < global_position.x:
 		death_state = PlayerStateMachine.State.DEATH_BACKWARD
 	state_machine.update_state_forced(death_state)
+
+func win_game() -> void:
+	if game_finished: return
+	game_finished = true
+	victory_ui.visible = true
+	# Detener lógica de movimiento
+	state_machine.update_state_forced(PlayerStateMachine.State.IDLE)
+	set_physics_process(false)

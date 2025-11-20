@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://s0fp7a2lidaa"]
+
+[ext_resource type="PackedScene" uid="uid://bpkl003c7q1mm" path="res://assets/models/objects/treasure_chest_1k.glb" id="1_1ldv7"]
+
+[node name="treasure_chest_1k" instance=ExtResource("1_1ldv7")]
