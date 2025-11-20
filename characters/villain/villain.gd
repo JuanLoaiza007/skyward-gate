@@ -6,7 +6,7 @@ enum VILLAIN { RAT }
 enum State { IDLE, WALKING, RETURNING, ATTACKING, ATTACKING_DELAY }
 
 @export var selected_villain: VILLAIN = VILLAIN.RAT
-@export var speed: float = 2.0
+@export var speed: float = 5
 
 const VILLAIN_SCENES = {
 	VILLAIN.RAT: preload("res://characters/villain/rat.tscn")

@@ -8,6 +8,7 @@ height = 1.2008543
 
 [node name="Villain" type="CharacterBody3D"]
 script = ExtResource("1")
+speed = 2.0
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -0.011510849, 0.28714573, -0.078867435)
