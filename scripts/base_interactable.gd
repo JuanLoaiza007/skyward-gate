@@ -16,4 +16,5 @@ func _interact() -> void:
 
 # Virtual method for interaction via signal from other interactables
 func _on_interacted() -> void:
+	print("_on_interacted called on: ", name)
 	pass

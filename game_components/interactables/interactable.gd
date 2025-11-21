@@ -17,17 +17,23 @@ const INTERACTABLE_SCENES = {
 
 var interaction_area: Area3D
 var player_in_area: bool = false
+var instanced_scene: Node
 
 func _ready() -> void:
 	super._ready()
 	_update_instance()
 
 func _update_instance() -> void:
+	# Remove existing instance
+	var placeholder = get_node_or_null("StaticBody3DPlaceholder")
+	for child in get_children():
+		if child != placeholder:
+			child.queue_free()
 	var scene = INTERACTABLE_SCENES[interactable_type]
-	var instance = scene.instantiate()
-	add_child(instance)
+	instanced_scene = scene.instantiate()
+	add_child(instanced_scene)
 	# Find InteractionArea in the instance
-	interaction_area = find_interaction_area(instance)
+	interaction_area = find_interaction_area(instanced_scene)
 	if interaction_area:
 		interaction_area.body_entered.connect(_on_interaction_area_body_entered)
 		interaction_area.body_exited.connect(_on_interaction_area_body_exited)
@@ -42,10 +48,12 @@ func find_interaction_area(node: Node) -> Area3D:
 	return null
 
 func _input(event: InputEvent) -> void:
-	if interaction_area and event.is_action_pressed("KEY_E") and player_in_area:
+	if event.is_action_pressed("KEY_E") and player_in_area:
 		_interact()
 
 func _interact() -> void:
+	if target and target.instanced_scene and target.instanced_scene.has_method("_on_interacted"):
+		target.instanced_scene._on_interacted()
 	interacted.emit()
 
 func _on_interaction_area_body_entered(body: Node3D) -> void:

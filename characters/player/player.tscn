@@ -4336,6 +4336,7 @@ libraries = {
 script = ExtResource("2_health")
 
 [node name="AttackArea" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.99999416, -0.0034208386, 0, 0.0034208386, 0.99999416, 0, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="AttackArea"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.17248362, 0)

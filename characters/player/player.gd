@@ -106,6 +106,7 @@ func _input(event: InputEvent) -> void:
 		actions_audio.stream = attacking
 		actions_audio.play()
 
+
 func movement(delta: float, direction: Vector3, is_run_pressed: bool) -> void:
 	if state_machine.current_state == PlayerStateMachine.State.DANCING:
 		velocity.x = move_toward(velocity.x, 0, SPEED)

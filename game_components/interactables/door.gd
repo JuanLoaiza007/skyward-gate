@@ -11,10 +11,12 @@ func _ready() -> void:
 
 func _update_state() -> void:
 	visible = is_active
-	# Disable/enable collision shapes
+	# Disable/enable collision shapes and interaction areas
 	for child in get_children():
 		if child is CollisionShape3D:
 			child.disabled = !is_active
+		elif child is Area3D:
+			child.monitoring = is_active
 
 # Function to toggle the door on/off like a switch
 func toggle() -> void:
