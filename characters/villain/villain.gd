@@ -1,21 +1,49 @@
 @tool
 extends CharacterBody3D
 
-enum VILLAIN { RAT }
+enum VillainType { RAT, DOG, COC }
 
 enum State { IDLE, WALKING, RETURNING, ATTACKING, ATTACKING_DELAY }
 
-@export var selected_villain: VILLAIN = VILLAIN.RAT
+const VILLAIN_SCENES = {
+	VillainType.RAT: preload("res://characters/villain/rat.tscn"),
+	VillainType.DOG: preload("res://characters/villain/dog.tscn"),
+	VillainType.COC: preload("res://characters/villain/coc.tscn")
+}
+
+@export var villain_type: VillainType = VillainType.RAT:
+	set(value):
+		villain_type = value
+		if Engine.is_editor_hint():
+			_update_villain()
 @export var speed: float = 5
 
-const VILLAIN_SCENES = {
-	VILLAIN.RAT: preload("res://characters/villain/rat.tscn")
-}
+func _update_villain() -> void:
+	# Remove existing villain instance
+	for child in get_children():
+		if child != $AttackDelayTimmer:
+			child.queue_free()
+	# Instance the new villain
+	var villain_scene = VILLAIN_SCENES[villain_type].instantiate()
+	add_child(villain_scene)
+
+	# Reparent collision shape to the root for physics, or add default
+	if villain_scene.has_node("CollisionShape3D"):
+		var collision_shape = villain_scene.get_node("CollisionShape3D")
+		villain_scene.remove_child(collision_shape)
+		add_child(collision_shape)
+	else:
+		# Add default collision for villains without one (e.g., COC)
+		var default_shape = CapsuleShape3D.new()
+		default_shape.radius = 0.5
+		default_shape.height = 1.0
+		var default_collision = CollisionShape3D.new()
+		default_collision.shape = default_shape
+		add_child(default_collision)
 
 var vision_area: Area3D
 var attack_area: Area3D
 var damage_area: Area3D
-var rat_villain: Node3D
 var vision_range: float
 var attack_range: float
 
@@ -33,24 +61,53 @@ var is_attacking_delay: bool = false
 signal villain_attacked(damage: int, target: Node3D)
 
 func _ready() -> void:
+	if Engine.is_editor_hint():
+		_update_villain()
+		return
+
 	add_to_group("villain")
 	initial_position = global_position
-	_update_villain()
+
+	# Instance the villain scene
+	var villain_scene = VILLAIN_SCENES[villain_type].instantiate()
+	add_child(villain_scene)
+
+	# Verify required nodes in the instanced scene
+	if not villain_scene.has_node("VisionArea"):
+		push_error("Villain must have a VisionArea node")
+		return
+	if not villain_scene.has_node("AttackArea"):
+		push_error("Villain must have an AttackArea node")
+		return
+	if not villain_scene.has_node("DamageArea"):
+		push_error("Villain must have a DamageArea node")
+		return
+	# Note: COC doesn't have collision, will add default
+
+	# Assign areas
+	vision_area = villain_scene.get_node("VisionArea")
+	attack_area = villain_scene.get_node("AttackArea")
+	damage_area = villain_scene.get_node("DamageArea")
+
 	vision_area.body_entered.connect(_on_vision_body_entered)
 	vision_area.body_exited.connect(_on_vision_body_exited)
-
-func _update_villain() -> void:
-	# Instanciar el villano seleccionado
-	rat_villain = VILLAIN_SCENES[selected_villain].instantiate()
-	add_child(rat_villain)
-
-	# Asignar áreas
-	vision_area = rat_villain.get_node("VisionArea")
-	attack_area = rat_villain.get_node("AttackArea")
-	damage_area = rat_villain.get_node("DamageArea")
 	damage_area.body_entered.connect(_on_damage_body_entered)
 
-	# Obtener rangos de las áreas
+	# Reparent collision shape to the root for physics, or add default
+	if villain_scene.has_node("CollisionShape3D"):
+		var collision_shape = villain_scene.get_node("CollisionShape3D")
+		villain_scene.remove_child(collision_shape)
+		add_child(collision_shape)
+	else:
+		# Add default collision for villains without one (e.g., COC)
+		var default_shape = CapsuleShape3D.new()
+		default_shape.radius = 0.5
+		default_shape.height = 1.0
+		var default_collision = CollisionShape3D.new()
+		default_collision.shape = default_shape
+		add_child(default_collision)
+
+	# Get ranges
 	var vision_shape = vision_area.get_child(0) as CollisionShape3D
 	if vision_shape and vision_shape.shape is SphereShape3D:
 		vision_range = vision_shape.shape.radius
@@ -58,12 +115,6 @@ func _update_villain() -> void:
 	var attack_shape = attack_area.get_child(0) as CollisionShape3D
 	if attack_shape and attack_shape.shape is SphereShape3D:
 		attack_range = attack_shape.shape.radius
-
-	# Copiar collider del body
-	var body_collision = rat_villain.get_node("BodyCollision") as CollisionShape3D
-	if body_collision:
-		$CollisionShape3D.shape = body_collision.shape
-		$CollisionShape3D.transform = body_collision.transform
 
 func _physics_process(delta: float) -> void:
 	# Aplicar gravedad
