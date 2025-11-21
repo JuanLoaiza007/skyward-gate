@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://c1qwta4bttfql"]
 
-[ext_resource type="PackedScene" uid="uid://t8vp1cgwb2cu" path="res://assets/models/objects/diamond_cone.blend" id="1_io83h"]
+[ext_resource type="PackedScene" uid="uid://t8vp1cgwb2cu" path="res://assets/models/objects/collectables/diamond_cone.blend" id="1_io83h"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_io83h"]
 
