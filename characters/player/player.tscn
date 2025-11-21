@@ -4335,16 +4335,16 @@ libraries = {
 [node name="HealthComponent" type="Node" parent="."]
 script = ExtResource("2_health")
 
-[node name="AttackArea" type="Area3D" parent="."]
+[node name="Hurtbox" type="Area3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.99999416, -0.0034208386, 0, 0.0034208386, 0.99999416, 0, 0, 0)
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="AttackArea"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hurtbox"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.17248362, 0)
 shape = SubResource("CapsuleShape3D_xxgcw")
 
-[node name="DamageArea" type="Area3D" parent="."]
+[node name="Hitbox" type="Area3D" parent="."]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="DamageArea"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Hitbox"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.007446289, -0.15258789, -0.5004464)
 shape = SubResource("BoxShape3D_xxgcw")
 

@@ -409,14 +409,14 @@ transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
 [node name="CollisionShape3D" type="CollisionShape3D" parent="VisionArea"]
 shape = SubResource("SphereShape3D_ia0ra")
 
-[node name="AttackArea" type="Area3D" parent="."]
+[node name="HitboxArea" type="Area3D" parent="."]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="AttackArea"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HitboxArea"]
 transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0.6348413, 0)
 shape = SubResource("CylinderShape3D_td6qb")
 
-[node name="DamageArea" type="Area3D" parent="."]
+[node name="HurtboxArea" type="Area3D" parent="."]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="DamageArea"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HurtboxArea"]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.0018292516, 0.99328226, -6.105006e-05)
 shape = SubResource("CylinderShape3D_yro2r")

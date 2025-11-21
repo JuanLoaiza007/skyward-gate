@@ -26,7 +26,6 @@ const KNOCKBACK_Y = 6.0
 const KNOCKBACK_HORIZONTAL = 30.0
 # On attack
 
-
 @onready var camera = $CameraPivot
 @onready var foot_raycast = $FootRayCast
 @onready var footsteps_audio = $FootstepsAudio
