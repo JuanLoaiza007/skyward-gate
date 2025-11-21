@@ -18,7 +18,7 @@ const MUSIC: Dictionary = {
 	TRACKS.LOOP_TECHNO_2: preload("res://assets/audio/music/loop_techno_2.ogg"),
 }
 
-@export var current_music = TRACKS.LOOP_TECHNO_2
+@export var current_music = TRACKS.LOOP_STANDARD
 
 func _ready() -> void:
   # Play music

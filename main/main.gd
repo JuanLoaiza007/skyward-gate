@@ -1,6 +1,6 @@
 extends Node3D
 
 func _ready():
-	var level_scene = load("res://levels/level_1/level_1.tscn")
-	var level_instance = level_scene.instantiate()
-	add_child(level_instance)
+	var game_world_scene = load("res://game_world/game_world.tscn")
+	var game_world_instance = game_world_scene.instantiate()
+	add_child(game_world_instance)
