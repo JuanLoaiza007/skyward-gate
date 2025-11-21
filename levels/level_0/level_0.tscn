@@ -1,7 +1,6 @@
-[gd_scene load_steps=10 format=3 uid="uid://bi6jeqml44w13"]
+[gd_scene load_steps=9 format=3 uid="uid://bi6jeqml44w13"]
 
 [ext_resource type="PackedScene" uid="uid://c5snqxgqbp4s1" path="res://characters/player/player.tscn" id="1_rup2k"]
-[ext_resource type="PackedScene" uid="uid://bq3ijt1sxibei" path="res://characters/villain/villain.tscn" id="2_pgvl5"]
 [ext_resource type="PackedScene" path="res://ui/health_ui.tscn" id="3_health_ui"]
 
 [sub_resource type="GDScript" id="GDScript_rup2k"]
@@ -54,9 +53,6 @@ environment = SubResource("Environment_lm2rq")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 12.447183, 0)
-
-[node name="Villain" parent="." instance=ExtResource("2_pgvl5")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.010129929, 0.6266435, -5.361377)
 
 [node name="Player" parent="." instance=ExtResource("1_rup2k")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.015908241, 1.832124, 5.0235786)

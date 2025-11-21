@@ -6,6 +6,7 @@ var current_level_path: String = "res://ui/main_menu.tscn"
 
 func _ready():
 	load_level(current_level_path)
+	victory_ui.visible = false
 
 func load_level(level_path: String):
 	# Remover nivel actual si existe
@@ -32,3 +33,16 @@ func start_game():
 	load_level("res://levels/level_0/level_0.tscn")
 
 # Para transiciones futuras, agregar señales o animaciones
+
+@onready var victory_ui = $CanvasLayer/VictoryControl
+var game_finished = false
+
+func victory():
+	if game_finished: return
+	game_finished = true
+	victory_ui.visible = true
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	var player = get_tree().get_nodes_in_group("player")[0]
+	player.game_finished = true
+	player.set_physics_process(false)
+	player.state_machine.update_state_forced(PlayerStateMachine.State.IDLE)
