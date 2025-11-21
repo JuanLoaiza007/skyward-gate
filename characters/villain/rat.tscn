@@ -4,13 +4,13 @@
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_rat"]
 radius = 0.3149414
-height = 1.5117188
+height = 1.3799438
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_vision"]
 radius = 10.0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_s1kt0"]
-size = Vector3(1, 1.534668, 4.23584)
+size = Vector3(1, 1.6042786, 3.6958237)
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_s1kt0"]
 height = 1.3988647
@@ -22,7 +22,7 @@ radius = 1.0
 transform = Transform3D(-1.7484556e-08, 0, 0.4, 0, 0.4, 0, -0.4, 0, -1.7484556e-08, -0.015820313, 0, -0.015820313)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1.9106855e-15, 4.371139e-08, 1, 1, -4.371139e-08, 0, 4.371139e-08, 1, -4.371139e-08, -0.015820311, 0.307903, 0.06328125)
+transform = Transform3D(1.9106855e-15, 4.371139e-08, 1, 1, -4.371139e-08, 0, 4.371139e-08, 1, -4.371139e-08, -0.015820311, 0.307903, 0.06709595)
 shape = SubResource("CapsuleShape3D_rat")
 
 [node name="VisionArea" type="Area3D" parent="."]
@@ -34,7 +34,7 @@ shape = SubResource("SphereShape3D_vision")
 [node name="HitboxArea" type="Area3D" parent="."]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="HitboxArea"]
-transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0.3096216, -0.028808594)
+transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0.32201785, 0.06508942)
 shape = SubResource("BoxShape3D_s1kt0")
 
 [node name="HurtboxArea" type="Area3D" parent="."]
