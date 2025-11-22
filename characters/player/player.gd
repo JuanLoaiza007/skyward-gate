@@ -89,13 +89,6 @@ func _physics_process(delta: float) -> void:
 		push_rigid_objects()
 
 func _input(event: InputEvent) -> void:
-	if game_finished:
-		if event.is_action_pressed("ui_accept"):
-			# Restablecer salud si usas GameStateManager para evitar bucle de muerte al reiniciar
-			if GameStateManager:
-				GameStateManager.game_data[GameStateManager.GAME_DATA.PLAYER_HEALTH] = 3
-			get_tree().reload_current_scene()
-		return
 	if event is InputEventMouseMotion:
 		rotate_y(deg_to_rad(-event.relative.x * CAMERA_SENSIBILITY)) # X: on the screen horizontal
 		camera.rotate_x(deg_to_rad(-event.relative.y * CAMERA_SENSIBILITY)) # Y: on the screen vertical
@@ -228,12 +221,3 @@ func _on_damaged(amount: int, source_point: Vector3) -> void:
 
 func _on_died() -> void:
 	player_died.emit(last_damage_source)
-'''
-func win_game() -> void:
-	if game_finished: return
-	game_finished = true
-	victory_ui.visible = true
-	# Detener lógica de movimiento
-	state_machine.update_state_forced(PlayerStateMachine.State.IDLE)
-	set_physics_process(false)
-'''
