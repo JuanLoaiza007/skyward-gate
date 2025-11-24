@@ -38,9 +38,11 @@ func update_selection():
 
 func _on_next_level_pressed():
 	next_level_pressed.emit()
+	print("presione en enext level el siguiente nivel")
 
 func _on_main_menu_pressed():
 	main_menu_pressed.emit()
+	print("presione en enext level el volver al menu")
 
 # Función para mostrar la UI
 func show_ui():

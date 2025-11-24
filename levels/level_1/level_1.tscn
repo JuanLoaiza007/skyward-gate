@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://b75cswucbflef"]
+[gd_scene load_steps=15 format=3 uid="uid://b75cswucbflef"]
 
 [ext_resource type="PackedScene" uid="uid://c5snqxgqbp4s1" path="res://characters/player/player.tscn" id="2_45440"]
 [ext_resource type="PackedScene" uid="uid://ccuyw6trokxjl" path="res://levels/level_1/level_1_terrain.tscn" id="5_5b03i"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://cd5vqgevfy0rp" path="res://game_components/collectables/collectable.tscn" id="8_j48du"]
 [ext_resource type="PackedScene" uid="uid://boc00ix7c4cee" path="res://game_components/environment/trees/tree_1.tscn" id="9_8jbay"]
 [ext_resource type="PackedScene" uid="uid://gwp8qnbrcl33" path="res://game_components/environment/bushes/bush_01.tscn" id="10_la5aw"]
+[ext_resource type="PackedScene" uid="uid://b4bh4g7bbshda" path="res://game_components/checkpoints/checkpoint.tscn" id="11_qbdb0"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5b03i"]
 
@@ -179,3 +180,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.929039, 0, -35.402763)
 
 [node name="Bush1" parent="Bushes" instance=ExtResource("10_la5aw")]
 transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 6.0792427, 0, -36.142586)
+
+[node name="Checkpoints" type="Node3D" parent="."]
+
+[node name="Area3D" parent="Checkpoints" instance=ExtResource("11_qbdb0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29.81871, 0, -6.609894)

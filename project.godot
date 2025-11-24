@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 GameStateManager="*res://scripts/game_state_manager.gd"
 AudioManager="*res://scripts/audio_manager.gd"
+CheckpointManager="*res://scripts/checkpoint_manager.gd"
 
 [input]
 
