@@ -2,6 +2,7 @@ extends Interactable
 
 var interaction_area: Area3D
 var player_in_area: bool = false
+var is_pressed: bool = false
 
 func _ready() -> void:
 	super._ready()
@@ -14,8 +15,14 @@ func _input(event: InputEvent) -> void:
 		_interact()
 
 func _interact() -> void:
-	interacted.emit()
-
+	if not is_pressed:
+		is_pressed = true
+		
+func force_interact():
+	# Simular la interacción sin necesidad del jugador
+	if not is_pressed:
+		is_pressed = true
+		
 func _on_interaction_area_body_entered(body: Node3D) -> void:
 	if body.is_in_group("player"):
 		player_in_area = true
@@ -23,3 +30,7 @@ func _on_interaction_area_body_entered(body: Node3D) -> void:
 func _on_interaction_area_body_exited(body: Node3D) -> void:
 	if body.is_in_group("player"):
 		player_in_area = false
+
+func get_unique_id() -> String:
+	# Usar nombre y posición global como identificador único
+	return name + "_" + str(global_transform.origin)

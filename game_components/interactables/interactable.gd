@@ -18,10 +18,20 @@ const INTERACTABLE_SCENES = {
 var interaction_area: Area3D
 var player_in_area: bool = false
 var instanced_scene: Node
+var has_been_interacted: bool = false
 
 func _ready() -> void:
 	super._ready()
 	_update_instance()
+	
+	# Cargar estado guardado si existe
+	var saved_state = CheckpointManager.get_interactable_state(get_unique_id())
+	if saved_state:
+		load_state(saved_state)
+
+func get_unique_id() -> String:
+	# Usar nombre y posición global como identificador único
+	return name + "_" + str(global_transform.origin)
 
 func _update_instance() -> void:
 	# Remove existing instance
@@ -54,6 +64,12 @@ func _input(event: InputEvent) -> void:
 func _interact() -> void:
 	if target and target.instanced_scene and target.instanced_scene.has_method("_on_interacted"):
 		target.instanced_scene._on_interacted()
+		has_been_interacted = true
+		
+		# Guardar estado
+		save_state()
+		CheckpointManager.update_current_state()
+		
 	interacted.emit()
 
 func _on_interaction_area_body_entered(body: Node3D) -> void:
@@ -63,3 +79,29 @@ func _on_interaction_area_body_entered(body: Node3D) -> void:
 func _on_interaction_area_body_exited(body: Node3D) -> void:
 	if body.is_in_group("player"):
 		player_in_area = false
+
+# Métodos para estado persistente
+func save_state() -> void:
+	var state = {
+		"has_been_interacted": has_been_interacted,
+		"player_in_area": player_in_area
+	}
+	CheckpointManager.save_interactable_state(get_path(), state)
+
+func load_state(state: Dictionary) -> void:
+	has_been_interacted = state.get("has_been_interacted", false)
+	player_in_area = state.get("player_in_area", false)
+	
+	# Si ya fue interactuado, forzar el estado en el objetivo
+	if has_been_interacted and target and target.instanced_scene and target.instanced_scene.has_method("force_interact"):
+		target.instanced_scene.force_interact()
+
+func get_state() -> Dictionary:
+	return {
+		"has_been_interacted": has_been_interacted,
+		"player_in_area": player_in_area
+	}
+
+# Añadir al grupo "interactables"
+func _enter_tree():
+	add_to_group("interactables")

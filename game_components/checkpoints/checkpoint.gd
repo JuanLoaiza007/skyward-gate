@@ -21,7 +21,10 @@ func activate_checkpoint(player: Node3D):
 	# Guardar datos del checkpoint
 	var player_health = 3
 	if GameStateManager:
-		player_health = GameStateManager.game_data[GameStateManager.GAME_DATA.PLAYER_HEALTH]
+		player_health = player.health_component.get_current_health()
+	else:
+		if GameStateManager:
+			player_health = GameStateManager.game_data[GameStateManager.GAME_DATA.PLAYER_HEALTH]
 	
 	# Obtener el nivel actual desde GameWorld
 	var game_world = get_node("/root/Main/GameWorld")

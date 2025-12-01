@@ -53,16 +53,29 @@ func hide_all_ui():
 
 func load_level(level_path: String):
 	print("Cargando nivel: ", level_path)
-	# Ocultar UIs
+	
+	# Ocultar todas las UIs
 	hide_all_ui()
+	
+	# Reiniciar estado del juego
 	game_finished = false
+	
+	# Verificar si estamos restaurando desde un checkpoint
+	var checkpoint_data = CheckpointManager.get_checkpoint_data()
+	var is_checkpoint_restore = checkpoint_data and checkpoint_data.get("level_path", "") == level_path
+	
+	# Si NO es una restauración desde checkpoint del mismo nivel, limpiar checkpoint
+	if not is_checkpoint_restore:
+		CheckpointManager.clear_checkpoint()
+	
 	# Remover nivel actual si existe
 	for child in current_level_node.get_children():
 		child.queue_free()
-		
+	
 	# Cargar y instanciar nuevo nivel
 	var level_scene = load(level_path)
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	
 	if level_scene:
 		var level_instance = level_scene.instantiate()
 		current_level_node.add_child(level_instance)
@@ -74,10 +87,10 @@ func load_level(level_path: String):
 				current_level_id = id
 				break
 
-		# Actualizar checkpoint data con nivel actual
-		var checkpoint_data = CheckpointManager.get_checkpoint_data()
+		# Actualizar checkpoint data con nivel actual (si hay checkpoint)
 		if checkpoint_data:
 			checkpoint_data["level_path"] = current_level_path
+			print("Checkpoint data actualizada con nivel: ", current_level_path)
 
 		# Conectar señales
 		var treasure_chest = level_instance.get_node_or_null("TreasureChest")
@@ -86,12 +99,25 @@ func load_level(level_path: String):
 		var player = level_instance.get_node_or_null("Player")
 		if player:
 			player.player_died.connect(Callable(self, "on_player_died"))
-			
-		# Restaurar estado si hay checkpoint
-		if checkpoint_data and checkpoint_data.get("level_path", "") == current_level_path:
-			restore_game_state(level_instance)			
+		
+		# Restaurar estado si es una restauración desde checkpoint
+		if is_checkpoint_restore:
+			print("Restaurando desde checkpoint para nivel: ", level_path)
+			# Usar call_deferred para asegurar que todos los nodos estén completamente cargados
+			call_deferred("restore_game_state_deferred", level_instance)
+		else:
+			print("Carga normal del nivel: ", level_path)
 	else:
 		push_error("No se pudo cargar el nivel: " + level_path)
+
+# Función auxiliar para restaurar el estado de manera deferida
+func restore_game_state_deferred(level_instance: Node):
+	# Esperar un frame para asegurar que todos los nodos estén listos
+	await get_tree().process_frame
+	await get_tree().process_frame  # Doble espera para mayor seguridad
+	
+	# Ahora restaurar el estado
+	restore_game_state(level_instance)
 
 
 func restore_from_checkpoint():
@@ -114,52 +140,124 @@ func restore_from_checkpoint():
 func restore_game_state(level_instance: Node):
 	var checkpoint_data = CheckpointManager.get_checkpoint_data()
 	if not checkpoint_data:
+		print("No hay datos de checkpoint para restaurar")
 		return
+	
+	print("=== INICIANDO RESTAURACIÓN DE ESTADO ===")
+	print("Datos del checkpoint: ", checkpoint_data)
 	
 	# Restaurar jugador
 	var player = level_instance.get_node_or_null("Player")
 	if player:
-		# Ajustar la posición Y para spawnear 2 unidades arriba del checkpoint
-		var original_position = checkpoint_data["player_position"]
-		var spawn_position = original_position
-		spawn_position.y += 2.0  # Añadir 2 unidades en el eje Y
-		print("Posición original del checkpoint: ", original_position)
+		# Ajustar posición: 2 unidades arriba y 2 unidades a la izquierda
+		var spawn_position = checkpoint_data["player_position"]
+		spawn_position.y += 2.0
+		spawn_position.x -= 2.0  # 2 unidades a la izquierda
+		
+		print("Posición original del checkpoint: ", checkpoint_data["player_position"])
 		print("Posición ajustada del spawn: ", spawn_position)
+		
 		player.global_position = spawn_position
 		
-		# Establecer la salud
+		# Restaurar salud del checkpoint
 		if player.health_component.has_method("set_health"):
 			player.health_component.set_health(checkpoint_data["player_health"])
+			print("Salud restaurada: ", checkpoint_data["player_health"])
 		
 		# Reactivar completamente al jugador
 		player.is_dead = false
 		player.game_finished = false
 		player.set_physics_process(true)
-		
-		# Restaurar estado de la máquina de estados
 		player.state_machine.update_state_forced(PlayerStateMachine.State.IDLE)
 	
-	# Restaurar collectables
-	for collectable in get_tree().get_nodes_in_group("collectables"):
-		var collectable_id = collectable.get_path()
-		if CheckpointManager.is_item_collected(collectable_id):
-			collectable.mark_as_collected()
+	# RESTAURAR COLECTABLES
+	print("=== RESTAURANDO COLECTABLES ===")
+	var collected_items = checkpoint_data.get("collected_items", [])
+	print("Colectables en checkpoint: ", collected_items)
+	print("Total colectables en checkpoint: ", collected_items.size())
 	
-	# Restaurar interactuables
-	for interactable in get_tree().get_nodes_in_group("interactables"):
-		var interactable_id = interactable.get_path()
-		var state = CheckpointManager.get_interactable_state(interactable_id)
-		if state:
-			interactable.load_state(state)
+	# Opción 1: Buscar por rutas exactas del checkpoint
+	var colectables_restaurados = 0
+	for collectable_path_str in collected_items:
+		# Convertir string a NodePath
+		var collectable_path = NodePath(collectable_path_str)
+		print("Buscando colectable con path: ", collectable_path)
+		
+		# Intentar obtener el nodo
+		var collectable_node = level_instance.get_node_or_null(collectable_path)
+		if collectable_node:
+			print("  -> Encontrado: ", collectable_node.name)
+			if collectable_node.has_method("mark_as_collected"):
+				collectable_node.mark_as_collected()
+				colectables_restaurados += 1
+				print("  -> Marcado como recolectado")
+			else:
+				print("  -> ERROR: No tiene método mark_as_collected")
+		else:
+			print("  -> NO encontrado por path directo")
 	
-	# Restaurar checkpoints
+	# Opción 2: Búsqueda por grupo como respaldo
+	print("--- Búsqueda por grupo 'collectables' ---")
+	var collectables_in_group = get_tree().get_nodes_in_group("collectables")
+	print("Colectables en grupo: ", collectables_in_group.size())
+	
+	for collectable in collectables_in_group:
+		# Verificar si este collectable está en la lista del checkpoint
+		var collectable_unique_id = ""
+		if collectable.has_method("get_unique_id"):
+			collectable_unique_id = collectable.get_unique_id()
+		else:
+			# Fallback: usar nombre y posición
+			collectable_unique_id = collectable.name + "_" + str(collectable.global_transform.origin)
+		
+		# Buscar si este ID está en los collectables del checkpoint
+		var found_in_checkpoint = false
+		for checkpoint_item in collected_items:
+			if checkpoint_item.contains(collectable.name) or checkpoint_item == collectable_unique_id:
+				found_in_checkpoint = true
+				break
+		
+		if found_in_checkpoint and not collectable.collected:
+			print("Marcando collectable por grupo: ", collectable.name)
+			if collectable.has_method("mark_as_collected"):
+				collectable.mark_as_collected()
+				colectables_restaurados += 1
+	
+	print("Total colectables restaurados: ", colectables_restaurados)
+	
+	# RESTAURAR INTERACTUABLES
+	print("=== RESTAURANDO INTERACTUABLES ===")
+	var interactables_state = checkpoint_data.get("interactables_state", {})
+	print("Interactuables en checkpoint: ", interactables_state.keys())
+	
+	for interactable_path_str in interactables_state.keys():
+		var interactable_path = NodePath(interactable_path_str)
+		print("Buscando interactuable: ", interactable_path)
+		
+		var interactable_node = level_instance.get_node_or_null(interactable_path)
+		if interactable_node:
+			var state = interactables_state[interactable_path_str]
+			print("  -> Encontrado, estado: ", state)
+			
+			if interactable_node.has_method("load_state"):
+				interactable_node.load_state(state)
+				print("  -> Estado cargado")
+			else:
+				print("  -> ERROR: No tiene método load_state")
+		else:
+			print("  -> NO encontrado")
+	
+	# RESTAURAR CHECKPOINTS VISUALMENTE
+	print("=== RESTAURANDO CHECKPOINTS VISUALES ===")
 	for checkpoint in get_tree().get_nodes_in_group("checkpoints"):
-		var checkpoint_data2 = CheckpointManager.get_checkpoint_data()
-		if checkpoint.checkpoint_id == checkpoint_data2.get("checkpoint_id", ""):
+		if checkpoint.checkpoint_id == checkpoint_data.get("checkpoint_id", ""):
 			checkpoint.activated = true
 			checkpoint.update_visual_state()
+			print("Checkpoint visual activado: ", checkpoint.checkpoint_id)
 		else:
 			checkpoint.reset()
+	
+	print("=== RESTAURACIÓN COMPLETADA ===")
 
 func on_player_died(last_damage: Vector3):
 	var player = get_tree().get_nodes_in_group("player")[0]
