@@ -1,6 +1,6 @@
-[gd_scene load_steps=3 format=3 uid="uid://death_ui_scene"]
+[gd_scene load_steps=3 format=3 uid="uid://drhahg0ub4afb"]
 
-[ext_resource type="Script" path="res://ui/death_ui.gd" id="1"]
+[ext_resource type="Script" uid="uid://d16roc85b8sul" path="res://ui/death_ui.gd" id="1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
 bg_color = Color(0, 0, 0, 0.5)

@@ -1,13 +1,17 @@
-[gd_scene load_steps=12 format=3 uid="uid://b75cswucbflef"]
+[gd_scene load_steps=16 format=3 uid="uid://b75cswucbflef"]
 
 [ext_resource type="PackedScene" uid="uid://c5snqxgqbp4s1" path="res://characters/player/player.tscn" id="2_45440"]
 [ext_resource type="PackedScene" uid="uid://ccuyw6trokxjl" path="res://levels/level_1/level_1_terrain.tscn" id="5_5b03i"]
 [ext_resource type="PackedScene" uid="uid://bq3ijt1sxibei" path="res://characters/villain/villain.tscn" id="6_e6u7d"]
 [ext_resource type="PackedScene" uid="uid://cmnujpwig5ob8" path="res://game_components/environment/platforms/grass_platform_01.tscn" id="6_mxc8w"]
-[ext_resource type="Script" uid="uid://badg3ybtn42jx" path="res://levels/level_1/level_1.gd" id="7_level1_script"]
+[ext_resource type="Script" uid="uid://dvepwov4km8uv" path="res://levels/level_1/level_1.gd" id="7_level1_script"]
 [ext_resource type="PackedScene" uid="uid://dj2up8djpyavs" path="res://game_components/environment/fences/wooden_fence.tscn" id="7_mxc8w"]
 [ext_resource type="PackedScene" uid="uid://q8qwdd7rnawk" path="res://game_components/interactables/interactable.tscn" id="8_8jbay"]
 [ext_resource type="PackedScene" uid="uid://cd5vqgevfy0rp" path="res://game_components/collectables/collectable.tscn" id="8_j48du"]
+[ext_resource type="PackedScene" uid="uid://boc00ix7c4cee" path="res://game_components/environment/trees/tree_1.tscn" id="9_8jbay"]
+[ext_resource type="PackedScene" uid="uid://gwp8qnbrcl33" path="res://game_components/environment/bushes/bush_01.tscn" id="10_la5aw"]
+[ext_resource type="PackedScene" uid="uid://b4bh4g7bbshda" path="res://game_components/checkpoints/checkpoint.tscn" id="11_qbdb0"]
+[ext_resource type="PackedScene" uid="uid://cnk7fnubffbht" path="res://game_components/items/treasure_chest.tscn" id="12_hyp3v"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5b03i"]
 
@@ -73,7 +77,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.613471, 2.5331974e-07, -6.
 
 [node name="Collectables" type="Node3D" parent="."]
 
-[node name="Collectable" parent="Collectables" instance=ExtResource("8_j48du")]
+[node name="Collectable1" parent="Collectables" instance=ExtResource("8_j48du")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.738759, 1.3840995, -3.1596422)
 
 [node name="Collectable6" parent="Collectables" instance=ExtResource("8_j48du")]
@@ -90,59 +94,63 @@ transform = Transform3D(0.6570464, 0, 0.75385016, 0, 1, 0, -0.75385016, 0, 0.657
 
 [node name="Villains" type="Node3D" parent="."]
 
-[node name="Villain" parent="Villains" instance=ExtResource("6_e6u7d")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 3.3153872, 1.382174, -13.9194565)
-speed = 10.0
+[node name="VillainGroup1" type="Node3D" parent="Villains"]
 
-[node name="Villain2" parent="Villains" instance=ExtResource("6_e6u7d")]
-transform = Transform3D(-0.258819, 0, 0.9659258, 0, 1, 0, -0.9659258, 0, -0.258819, 7.8588214, 0.6553168, -16.904753)
-speed = 10.0
-
-[node name="Villain3" parent="Villains" instance=ExtResource("6_e6u7d")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 4.607785, 0.63607985, -24.045595)
-speed = 10.0
-
-[node name="Villain4" parent="Villains" instance=ExtResource("6_e6u7d")]
+[node name="Villain4" parent="Villains/VillainGroup1" instance=ExtResource("6_e6u7d")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40.31423, 0.81669134, -15.175913)
 speed = 10.0
 
-[node name="Villain5" parent="Villains" instance=ExtResource("6_e6u7d")]
+[node name="Villain5" parent="Villains/VillainGroup1" instance=ExtResource("6_e6u7d")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.949974, 0.8255913, -25.493858)
 speed = 10.0
 
-[node name="Villain6" parent="Villains" instance=ExtResource("6_e6u7d")]
+[node name="Villain6" parent="Villains/VillainGroup1" instance=ExtResource("6_e6u7d")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 43.900078, 0.8212177, -19.947441)
 speed = 10.0
 
-[node name="Villain7" parent="Villains" instance=ExtResource("6_e6u7d")]
+[node name="Villain7" parent="Villains/VillainGroup1" instance=ExtResource("6_e6u7d")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.030632, 1.0275743, -21.615429)
 speed = 10.0
 
-[node name="Villain8" parent="Villains" instance=ExtResource("6_e6u7d")]
+[node name="VillainGroup2" type="Node3D" parent="Villains"]
+
+[node name="Villain" parent="Villains/VillainGroup2" instance=ExtResource("6_e6u7d")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 3.3153872, 1.382174, -13.9194565)
+speed = 10.0
+
+[node name="Villain2" parent="Villains/VillainGroup2" instance=ExtResource("6_e6u7d")]
+transform = Transform3D(-0.258819, 0, 0.9659258, 0, 1, 0, -0.9659258, 0, -0.258819, 7.8588214, 0.6553168, -16.904753)
+speed = 10.0
+
+[node name="Villain3" parent="Villains/VillainGroup2" instance=ExtResource("6_e6u7d")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 4.607785, 0.63607985, -24.045595)
+speed = 10.0
+
+[node name="Villain8" parent="Villains/VillainGroup2" instance=ExtResource("6_e6u7d")]
 transform = Transform3D(-0.18676414, 0, 0.98240477, 0, 1, 0, -0.98240477, 0, -0.18676414, 3.2264042, 0.63680524, -19.928211)
 speed = 10.0
 
-[node name="Villain9" parent="Villains" instance=ExtResource("6_e6u7d")]
+[node name="Villain9" parent="Villains/VillainGroup2" instance=ExtResource("6_e6u7d")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 11.220725, 0.5523335, -22.218498)
 speed = 10.0
 
-[node name="Villain10" parent="Villains" instance=ExtResource("6_e6u7d")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.34776336, 0.5043107, -17.548708)
+[node name="Villain10" parent="Villains/VillainGroup2" instance=ExtResource("6_e6u7d")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.38439536, 0.5043107, -17.335922)
 speed = 10.0
 
-[node name="Villain11" parent="Villains" instance=ExtResource("6_e6u7d")]
+[node name="Villain11" parent="Villains/VillainGroup2" instance=ExtResource("6_e6u7d")]
 transform = Transform3D(-0.17498872, 0, 0.98457044, 0, 1, 0, -0.98457044, 0, -0.17498872, 8.250521, 0.55233276, -22.80235)
 speed = 10.0
 
-[node name="Villain12" parent="Villains" instance=ExtResource("6_e6u7d")]
+[node name="Villain12" parent="Villains/VillainGroup2" instance=ExtResource("6_e6u7d")]
 transform = Transform3D(-0.50000006, 0, 0.8660254, 0, 1, 0, -0.8660254, 0, -0.50000006, 12.858266, 0.50329673, -15.74792)
 speed = 10.0
 
-[node name="Villain13" parent="Villains" instance=ExtResource("6_e6u7d")]
+[node name="Villain13" parent="Villains/VillainGroup2" instance=ExtResource("6_e6u7d")]
 transform = Transform3D(-0.25881904, 0, 0.9659258, 0, 1, 0, -0.9659258, 0, -0.25881904, 9.309428, 0.50624925, -20.187714)
 speed = 10.0
 
-[node name="Villain14" parent="Villains" instance=ExtResource("6_e6u7d")]
+[node name="Villain14" parent="Villains/VillainGroup2" instance=ExtResource("6_e6u7d")]
 transform = Transform3D(-0.25881904, 0, 0.9659258, 0, 1, 0, -0.9659258, 0, -0.25881904, 8.1763315, 0.5014575, -13.696708)
 speed = 10.0
 
@@ -152,9 +160,45 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.066637516, 1.4472733, -1.7
 [node name="Node3D" type="Node3D" parent="."]
 
 [node name="Button" parent="Node3D" node_paths=PackedStringArray("target") instance=ExtResource("8_8jbay")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 42.039795, 0.009585142, -23.378275)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 42.04, 0.01, -23.37)
 target = NodePath("../Door1")
 
 [node name="Door1" parent="Node3D" instance=ExtResource("8_8jbay")]
 transform = Transform3D(0.5532897, 0, 0.832989, 0, 1, 0, -0.832989, 0, 0.5532897, 2.286686, 0.0097904205, -27.545565)
 interactable_type = 1
+
+[node name="Trees" type="Node3D" parent="."]
+
+[node name="Tree1" parent="Trees" instance=ExtResource("9_8jbay")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.7176523, 0, -18.39266)
+
+[node name="Tree2" parent="Trees" instance=ExtResource("9_8jbay")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.909213, 0, -15.489058)
+
+[node name="Tree3" parent="Trees" instance=ExtResource("9_8jbay")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.2594147, 0, -13.458706)
+
+[node name="Tree4" parent="Trees" instance=ExtResource("9_8jbay")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.929039, 0, -35.402763)
+
+[node name="Bushes" type="Node3D" parent="."]
+
+[node name="Bush1" parent="Bushes" instance=ExtResource("10_la5aw")]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 5, 6.0792427, 0, -36.142586)
+
+[node name="Checkpoints" type="Node3D" parent="."]
+
+[node name="Checkpoint1" parent="Checkpoints" instance=ExtResource("11_qbdb0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29.81871, 0, -6.609894)
+
+[node name="Checkpoint2" parent="Checkpoints" instance=ExtResource("11_qbdb0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.9126205, 0, -33.568092)
+
+[node name="Checkpoint3" parent="Checkpoints" instance=ExtResource("11_qbdb0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.781471, 7.7751284, -103.77094)
+
+[node name="Checkpoint4" parent="Checkpoints" instance=ExtResource("11_qbdb0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.91568, 0.088412285, -154.45119)
+
+[node name="TreasureChest" parent="." instance=ExtResource("12_hyp3v")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.215515, 19.438559, -102.57312)

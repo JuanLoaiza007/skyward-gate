@@ -1,6 +1,6 @@
 [gd_scene load_steps=31 format=4 uid="uid://c5snqxgqbp4s1"]
 
-[ext_resource type="Script" uid="uid://dl2507xiublb" path="res://characters/player/player.gd" id="1_508ok"]
+[ext_resource type="Script" uid="uid://ci575d2wc24mx" path="res://characters/player/player.gd" id="1_508ok"]
 [ext_resource type="Script" uid="uid://ntsgmvcu1rkp" path="res://game_components/health/health_component.gd" id="2_health"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_b886q"]

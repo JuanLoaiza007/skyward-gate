@@ -5,6 +5,8 @@ extends Interactable
 		is_active = value
 		_update_state()
 
+var is_open: bool = false
+
 func _ready() -> void:
 	super._ready()
 	_update_state()
@@ -21,6 +23,16 @@ func _update_state() -> void:
 # Function to toggle the door on/off like a switch
 func toggle() -> void:
 	is_active = !is_active
+	is_open = !is_active
 
 func _on_interacted() -> void:
 	toggle()
+
+func force_interact():
+	# Abrir la puerta sin necesidad del jugador
+	if is_active:  # Si está cerrada, abrirla
+		toggle()
+
+func get_unique_id() -> String:
+	# Usar nombre y posición global como identificador único
+	return name + "_" + str(global_transform.origin)

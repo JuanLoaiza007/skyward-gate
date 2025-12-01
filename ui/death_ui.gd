@@ -33,10 +33,24 @@ func update_selection():
 			buttons[i].release_focus()
 
 func _on_restart_pressed():
-	if GameStateManager:
-		GameStateManager.game_data[GameStateManager.GAME_DATA.PLAYER_HEALTH] = 3
+	visible = false
 	var game_world = get_node("/root/Main/GameWorld")
-	game_world.load_level(game_world.current_level_path)
+	print("GameWorld encontrado: ", game_world)
+	
+	var checkpoint_data = CheckpointManager.get_checkpoint_data()
+	print("Datos del checkpoint: ", checkpoint_data)
+	print("Nivel actual: ", game_world.current_level_path)
+	
+	if checkpoint_data and checkpoint_data.get("level_path", "") == game_world.current_level_path:
+		print("Restaurando desde checkpoint...")
+		game_world.restore_from_checkpoint()
+	else: 
+		print("Reiniciando nivel normalmente...")
+		if GameStateManager:
+			GameStateManager.game_data[GameStateManager.GAME_DATA.PLAYER_HEALTH] = 3
+			GameStateManager.save()
+		game_world.load_level(game_world.current_level_path)
 
 func _on_main_menu_pressed():
 	get_node("/root/Main/GameWorld").go_to_main_menu()
+	print("holaaaaaaaa")
