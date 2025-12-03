@@ -1,9 +1,10 @@
 [gd_scene load_steps=2 format=3 uid="uid://bq3ijt1sxibei"]
 
-[ext_resource type="Script" uid="uid://c8ttlexcuf8w4" path="res://characters/villain/villain.gd" id="1"]
+[ext_resource type="Script" uid="uid://c48vu80d7lymp" path="res://characters/villain/villain.gd" id="1"]
 
 [node name="Villain" type="CharacterBody3D"]
 script = ExtResource("1")
 speed = 2.0
+max_health = 3
 
 [node name="HitboxDelayTimmer" type="Timer" parent="."]

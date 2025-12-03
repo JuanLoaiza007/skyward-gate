@@ -19,6 +19,7 @@ const HealthComponent = preload("res://game_components/health/health_component.g
 		if Engine.is_editor_hint():
 			_update_villain()
 @export var speed: float = 5
+@export var max_health: int = 1  # Nueva propiedad para configurar salud
 
 func _update_villain() -> void:
 	# Remove existing villain instance
@@ -68,8 +69,30 @@ func _ready() -> void:
 		return
 
 	add_to_group("villain")
+	
+	# Crear HealthComponent usando el script predefinido
 	var health_component = HealthComponent.new()
+	health_component.name = "HealthComponent"
 	add_child(health_component)
+	
+	# DEBUG: Ver qué métodos tiene HealthComponent
+	# DEBUG: Ver qué métodos tiene HealthComponent
+	print("=== DEBUG HealthComponent en Villano ===")
+	print("Métodos disponibles:")
+	var methods = health_component.get_method_list()
+	for method in methods:
+		if method["name"] in ["set_health", "set_max_health", "take_damage"]:
+			print("  - ", method["name"])
+	
+	# Configurar salud usando métodos
+	if health_component.has_method("set_health"):
+		health_component.set_health(max_health)
+		print("Salud configurada a ", max_health, " usando set_health()")
+	else:
+		# Si no tiene set_health, intenta con call
+		health_component.call("set_health", max_health)
+		print("Salud configurada usando call()")
+	
 	initial_position = global_position
 
 	# Instance the villain scene
@@ -113,6 +136,29 @@ func _ready() -> void:
 	var hitbox_shape = hitbox_area.get_child(0) as CollisionShape3D
 	if hitbox_shape and hitbox_shape.shape is SphereShape3D:
 		hitbox_range = hitbox_shape.shape.radius
+	
+	# Conectar señales para debug
+	var hc = get_node("HealthComponent")
+	if hc:
+		if hc.has_signal("health_changed"):
+			hc.health_changed.connect(_on_health_changed)
+		if hc.has_signal("damaged"):
+			hc.damaged.connect(_on_damaged)
+		if hc.has_signal("died"):
+			hc.died.connect(_on_died)
+	
+	print("Villano ", name, " inicializado. Salud esperada: ", max_health)
+
+func _on_health_changed(new_health: int):
+	print("Villano ", name, " - Salud cambiada: ", new_health, "/", max_health)
+
+func _on_damaged(amount: int, source_point: Vector3):
+	print("Villano ", name, " recibió ", amount, " de daño desde ", source_point)
+
+func _on_died():
+	print("Villano ", name, " ha muerto!")
+	# Aquí podrías agregar animación de muerte, sonido, etc.
+	queue_free()
 
 func _physics_process(delta: float) -> void:
 	# Aplicar gravedad
@@ -173,7 +219,7 @@ func _returning_behavior(delta: float) -> void:
 
 func _hitboxing_behavior(delta: float) -> void:
 	if can_hitbox and target and in_player_hitbox_area and target.has_node("HealthComponent") and target.get_node("HealthComponent").is_alive():
-		target.get_node("HealthComponent").take_hurtbox(1, global_position)
+		target.get_node("HealthComponent").take_damage(1, global_position)
 		villain_hitboxed.emit(1, target)
 		can_hitbox = false
 
@@ -222,10 +268,13 @@ func _on_player_hitbox_area_body_exited(body: Node3D) -> void:
 
 func _on_hurtbox_body_entered(body: Node3D) -> void:
 	if body.is_in_group("player") and has_node("HealthComponent"):
-		get_node("HealthComponent").take_damage(1, global_position)
+		print("Villano ", name, ": Jugador entró en hurtbox - DAÑO RECIBIDO")
+		get_node("HealthComponent").take_damage(100, global_position)
+		print("¡Villano debería morir instantáneamente!")
 
 func _on_hitbox_body_entered(body: Node3D) -> void:
 	if body.is_in_group("player") and body.has_node("HealthComponent"):
+		print("Villano ", name, ": Jugador golpeado por hitbox")
 		body.get_node("HealthComponent").take_damage(1, global_position)
 
 func _on_hitbox_delay_timeout() -> void:
