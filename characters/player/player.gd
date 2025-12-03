@@ -25,12 +25,18 @@ const FOOTSTEP_PITCH_WALK = 0.8
 const KNOCKBACK_Y = 6.0
 const KNOCKBACK_HORIZONTAL = 30.0
 # On attack
+const ATTACK_DAMAGE = 1
+const ATTACK_RANGE = 1.5
+const ATTACK_COOLDOWN = 0.5
+
 
 @onready var camera = $CameraPivot
 @onready var foot_raycast = $FootRayCast
 @onready var footsteps_audio = $FootstepsAudio
 @onready var actions_audio = $ActionsAudio
 @onready var health_component = $HealthComponent
+@onready var attack_hitbox = $AttackHitbox
+@onready var attack_cooldown_timer = $AttackCooldownTimer
 # var victory_ui: Control
 var game_finished = false
 signal player_died(last_damage_source: Vector3)
@@ -43,6 +49,7 @@ var last_damage_source: Vector3
 @onready var attacking = load("res://assets/audio/sfx/sword-slice-distorted.wav")
 
 var push_direction: Vector3 = Vector3.ZERO
+var can_attack: bool = true
 
 func _ready() -> void:
 	add_to_group("player")
@@ -53,6 +60,14 @@ func _ready() -> void:
 	state_machine.name = "StateMachine"
 	# victory_ui = get_node("/root/Main/GameWorld/CanvasLayer/VictoryControl")
 	# Load health from game state
+	
+	if attack_hitbox:
+		attack_hitbox.body_entered.connect(_on_attack_hitbox_body_entered)
+		attack_hitbox.monitoring = false
+		
+	if attack_cooldown_timer:
+		attack_cooldown_timer.timeout.connect(_on_attack_cooldown_timeout)
+	
 	if GameStateManager:
 		GameStateManager.load()
 		var health = GameStateManager.game_data[GameStateManager.GAME_DATA.PLAYER_HEALTH]
@@ -96,10 +111,37 @@ func _input(event: InputEvent) -> void:
 
 	# Detección de ataque
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-		state_machine.update_state_forced(PlayerStateMachine.State.ATTACKING)
-		actions_audio.stream = attacking
-		actions_audio.play()
+		if can_attack:
+			perform_attack()
 
+func perform_attack():
+	if not can_attack:
+		return
+		
+	can_attack = false
+	state_machine.update_state_forced(PlayerStateMachine.State.ATTACKING)
+	actions_audio.stream = attacking
+	actions_audio.play()
+	
+	if attack_hitbox:
+		attack_hitbox.monitoring = true
+		
+	if attack_cooldown_timer:
+		attack_cooldown_timer.start(ATTACK_COOLDOWN)
+		
+	print("Ataque realizado")
+	
+func _on_attack_hitbox_body_entered(body: Node3D):
+	if body.is_in_group("villain") and body.has_node("HealthComponent"):
+		print("¡Golpeado villano: ", body.name, "!")
+		body.get_node("HealthComponent").take_damage(ATTACK_DAMAGE, global_position)
+
+func _on_attack_cooldown_timeout():
+	can_attack = true
+	# Desactivar hitbox después del ataque
+	if attack_hitbox:
+		attack_hitbox.monitoring = false
+	print("Ataque listo nuevamente")	
 
 func movement(delta: float, direction: Vector3, is_run_pressed: bool) -> void:
 	if state_machine.current_state == PlayerStateMachine.State.DANCING:
