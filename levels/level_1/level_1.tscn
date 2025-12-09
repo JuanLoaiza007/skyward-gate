@@ -113,6 +113,36 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.7654312, 1.3450389, -29.90
 [node name="WoodenFence" parent="Collectables" instance=ExtResource("7_mxc8w")]
 transform = Transform3D(0.6570464, 0, 0.75385016, 0, 1, 0, -0.75385016, 0, 0.6570464, 15.150554, -0.103451476, 3.747795)
 
+[node name="Collectable11" parent="Collectables" instance=ExtResource("8_j48du")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.424775, 1.3450389, -50.84204)
+
+[node name="Collectable12" parent="Collectables" instance=ExtResource("8_j48du")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.727635, 4.6786823, -58.0655)
+
+[node name="Collectable13" parent="Collectables" instance=ExtResource("8_j48du")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.34034, 8.902387, -73.90573)
+
+[node name="Collectable14" parent="Collectables" instance=ExtResource("8_j48du")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 29.773506, 9.560103, -115.69306)
+
+[node name="Collectable15" parent="Collectables" instance=ExtResource("8_j48du")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.180218, 7.8637476, -140.73663)
+
+[node name="Collectable16" parent="Collectables" instance=ExtResource("8_j48du")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -23.274675, 1.1484036, -154.0799)
+
+[node name="Collectable17" parent="Collectables" instance=ExtResource("8_j48du")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -19.189518, 1.1484036, -150.67546)
+
+[node name="Collectable18" parent="Collectables" instance=ExtResource("8_j48du")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.208363, 1.1484036, -155.25354)
+
+[node name="Collectable19" parent="Collectables" instance=ExtResource("8_j48du")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.405886, 1.1484036, -158.82361)
+
+[node name="Collectable20" parent="Collectables" instance=ExtResource("8_j48du")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.47342, 1.1484036, -159.78824)
+
 [node name="Villains" type="Node3D" parent="."]
 
 [node name="VillainGroup1" type="Node3D" parent="Villains"]
