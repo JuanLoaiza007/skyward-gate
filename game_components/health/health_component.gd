@@ -32,7 +32,7 @@ func take_damage(amount: int, source_point: Vector3 = Vector3.ZERO):
 	if current_health <= 0:
 		died.emit()
 
-func heal(amount: int):
+func increse_health(amount: int):
 	if amount <= 0:
 		return
 	current_health += amount

@@ -100,6 +100,9 @@ func collect():
 	
 	# Registrar en checkpoint manager
 	CheckpointManager.add_collected_item(get_path())
+
+	if selected_mesh == MESH.DIAMOND:
+		GameStateManager.add_diamond()
 	
 	# Actualizar estado del juego
 	GameStateManager.add_session_item(name + "_" + str(get_instance_id()))

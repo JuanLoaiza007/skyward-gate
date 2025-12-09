@@ -13,6 +13,7 @@ enum CHECKPOINT_DATA {
 	POSITION, # La posición de resurrección del jugador
 	PLAYER_HEALTH, # La vida del jugador en un momento dado en el nivel actual
 	SESSION_COLLECTED_ITEMS, # Los items que el jugador tiene temporalmente (si no ha pisado checkpoint)
+	DIAMOND_COUNT, # Contador de diamantes recolectados en la sesión actual
 }
 
 # --- Variables de Ruta y Estado ---
@@ -22,6 +23,7 @@ var game_data_path: String = "user://game_data.dat"
 const DEFAULT_INITIAL_HEALTH: int = 3
 const DEFAULT_SCORE: int = 0
 const DEFAULT_CHECKPOINT_LEVEL: String = "" # Level ID vacío para inicio limpio
+const DIAMONDS_FOR_LIFE: int = 3  # Diamantes necesarios para obtener una vida extra
 
 # Estado inicial que se usará para cualquier inicio limpio (nuevo juego o nuevo nivel sin checkpoint)
 var _initial_game_data: Dictionary = {
@@ -32,12 +34,17 @@ var _initial_game_data: Dictionary = {
 		CHECKPOINT_DATA.LEVEL : DEFAULT_CHECKPOINT_LEVEL,
 		CHECKPOINT_DATA.POSITION : Vector3.ZERO, # Usamos Vector3.ZERO como posición nula/segura
 		CHECKPOINT_DATA.PLAYER_HEALTH : DEFAULT_INITIAL_HEALTH,
-		CHECKPOINT_DATA.SESSION_COLLECTED_ITEMS : {}
+		CHECKPOINT_DATA.SESSION_COLLECTED_ITEMS : {},
+		CHECKPOINT_DATA.DIAMOND_COUNT : 0,  # Inicializar contador de diamantes en 0
 	}
 }
 
 # El estado actual del juego. Inicializado con los datos de inicio por defecto.
 var game_data: Dictionary = _initial_game_data.duplicate(true)
+
+# --- Señales ---
+signal diamond_collected(diamond_count: int, diamonds_needed: int)  # Se emite cuando se recolecta un diamante
+signal extra_life_earned  # Se emite cuando se alcanzan 3 diamantes
 
 # --- Funciones de Persistencia ---
 # Carga el estado del juego desde el disco. Si el archivo no existe, usa el estado inicial.
@@ -118,3 +125,52 @@ func save_checkpoint(new_position: Vector3, new_level_path: String, current_play
 # Añade un item al buffer temporal de la sesión
 func add_session_item(item_puid: String) -> void:
 	game_data[GAME_DATA.LAST_CHECKPOINT_DATA][CHECKPOINT_DATA.SESSION_COLLECTED_ITEMS][item_puid] = true
+
+func add_diamond() -> void:
+	# Obtener o crear checkpoint_data
+	var checkpoint_data = game_data.get(GAME_DATA.LAST_CHECKPOINT_DATA, {})
+	
+	# Obtener o inicializar contador de diamantes
+	var current_count = checkpoint_data.get(CHECKPOINT_DATA.DIAMOND_COUNT, 0)
+	current_count += 1
+	
+	# Actualizar en el diccionario
+	checkpoint_data[CHECKPOINT_DATA.DIAMOND_COUNT] = current_count
+	
+	# Asegurar que game_data tenga el checkpoint_data actualizado
+	game_data[GAME_DATA.LAST_CHECKPOINT_DATA] = checkpoint_data
+	
+	print("Diamante recolectado! Total: ", current_count, "/", DIAMONDS_FOR_LIFE)
+	
+	# Emitir señal para actualizar UI
+	diamond_collected.emit(current_count, DIAMONDS_FOR_LIFE)
+	
+	# Verificar si se alcanzaron 3 diamantes
+	if current_count >= DIAMONDS_FOR_LIFE:
+		# Otorgar vida extra
+		extra_life_earned.emit()
+		print("¡Vida extra obtenida por recolectar 3 diamantes!")
+		
+		# Resetear contador (puede haber excedentes si se recolectan más de 3 seguidos)
+		checkpoint_data[CHECKPOINT_DATA.DIAMOND_COUNT] = 0
+		game_data[GAME_DATA.LAST_CHECKPOINT_DATA] = checkpoint_data
+		# Emitir señal con contador actualizado
+		diamond_collected.emit(0, DIAMONDS_FOR_LIFE)
+
+# Obtiene el contador actual de diamantes
+func get_diamond_count() -> int:
+	var checkpoint_data = game_data.get(GAME_DATA.LAST_CHECKPOINT_DATA, {})
+	return checkpoint_data.get(CHECKPOINT_DATA.DIAMOND_COUNT, 0)
+
+# Obtiene la salud del jugador
+func get_player_health() -> int:
+	return game_data.get(GAME_DATA.PLAYER_HEALTH, DEFAULT_INITIAL_HEALTH)
+
+# Establece la salud del jugador
+func set_player_health(health: int) -> void:
+	game_data[GAME_DATA.PLAYER_HEALTH] = health
+	print("GameStateManager: Salud actualizada a ", health)
+
+# Obtiene diamantes necesarios para vida extra
+func get_diamonds_needed() -> int:
+	return DIAMONDS_FOR_LIFE

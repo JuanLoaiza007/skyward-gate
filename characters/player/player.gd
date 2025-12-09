@@ -26,8 +26,6 @@ const KNOCKBACK_Y = 6.0
 const KNOCKBACK_HORIZONTAL = 30.0
 # On attack
 const ATTACK_DAMAGE = 1
-const ATTACK_RANGE = 1.5
-const ATTACK_COOLDOWN = 0.5
 
 
 @onready var camera = $CameraPivot
@@ -67,6 +65,11 @@ func _ready() -> void:
 		print("Nodos en el hitbox: ", attack_hitbox.get_children())
 	else:
 		print("ERROR: No se encontró AttackHitbox en el jugador")
+
+	# Conectar señal de vida extra por diamantes
+	if GameStateManager:
+		GameStateManager.extra_life_earned.connect(_on_extra_life_earned)
+		print("Conectado a señal de vida extra por diamantes")
 	
 	if GameStateManager:
 		GameStateManager.load()
@@ -117,6 +120,16 @@ func _input(event: InputEvent) -> void:
 func is_attacking() -> bool:
 	return is_player_attacking
 
+# Función llamada cuando se obtiene vida extra por diamantes
+func _on_extra_life_earned() -> void:
+	print("¡Jugador obtiene vida extra por recolectar 3 diamantes!")
+	
+	# Aumentar vida en 1
+	if health_component.has_method("heal"):
+		health_component.heal(1)
+		print("Vida aumentada a: ", health_component.get_current_health())
+	else:
+		print("ERROR: HealthComponent no tiene método heal")
 
 func perform_attack():
 	is_player_attacking = true
