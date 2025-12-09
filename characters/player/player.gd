@@ -36,8 +36,7 @@ const ATTACK_COOLDOWN = 0.5
 @onready var actions_audio = $ActionsAudio
 @onready var health_component = $HealthComponent
 @onready var attack_hitbox = $AttackHitbox
-@onready var attack_cooldown_timer = $AttackCooldownTimer
-# var victory_ui: Control
+
 var game_finished = false
 signal player_died(last_damage_source: Vector3)
 var state_machine: PlayerStateMachine
@@ -50,6 +49,8 @@ var last_damage_source: Vector3
 
 var push_direction: Vector3 = Vector3.ZERO
 var can_attack: bool = true
+var is_player_attacking: bool = false
+var attack_hitbox_active: bool = false
 
 func _ready() -> void:
 	add_to_group("player")
@@ -58,15 +59,14 @@ func _ready() -> void:
 	state_machine = PlayerStateMachine.new()
 	add_child(state_machine)
 	state_machine.name = "StateMachine"
-	# victory_ui = get_node("/root/Main/GameWorld/CanvasLayer/VictoryControl")
-	# Load health from game state
-	
+
 	if attack_hitbox:
 		attack_hitbox.body_entered.connect(_on_attack_hitbox_body_entered)
 		attack_hitbox.monitoring = false
-		
-	if attack_cooldown_timer:
-		attack_cooldown_timer.timeout.connect(_on_attack_cooldown_timeout)
+		print("Hitbox de ataque configurado - Área: ", attack_hitbox.name)
+		print("Nodos en el hitbox: ", attack_hitbox.get_children())
+	else:
+		print("ERROR: No se encontró AttackHitbox en el jugador")
 	
 	if GameStateManager:
 		GameStateManager.load()
@@ -114,34 +114,45 @@ func _input(event: InputEvent) -> void:
 		if can_attack:
 			perform_attack()
 
+func is_attacking() -> bool:
+	return is_player_attacking
+
+
 func perform_attack():
-	if not can_attack:
-		return
-		
-	can_attack = false
+	is_player_attacking = true
 	state_machine.update_state_forced(PlayerStateMachine.State.ATTACKING)
 	actions_audio.stream = attacking
 	actions_audio.play()
 	
 	if attack_hitbox:
+		attack_hitbox_active = true
 		attack_hitbox.monitoring = true
-		
-	if attack_cooldown_timer:
-		attack_cooldown_timer.start(ATTACK_COOLDOWN)
-		
-	print("Ataque realizado")
+		print("Hitbox de ataque ACTIVADO - Buscando enemigos...")
+	
+	print("Ataque realizado - SIN COOLDOWN")
+	
+	# Desactivar el hitbox después de 0.2 segundos (tiempo de animación)
+	await get_tree().create_timer(0.2).timeout
+	
+	if attack_hitbox:
+		attack_hitbox_active = false
+		attack_hitbox.monitoring = false
+		print("Hitbox de ataque DESACTIVADO")
+	
+	is_player_attacking = false
 	
 func _on_attack_hitbox_body_entered(body: Node3D):
-	if body.is_in_group("villain") and body.has_node("HealthComponent"):
-		print("¡Golpeado villano: ", body.name, "!")
-		body.get_node("HealthComponent").take_damage(ATTACK_DAMAGE, global_position)
-
-func _on_attack_cooldown_timeout():
-	can_attack = true
-	# Desactivar hitbox después del ataque
-	if attack_hitbox:
-		attack_hitbox.monitoring = false
-	print("Ataque listo nuevamente")	
+	if body.is_in_group("villain"):
+		print("=== DEBUG HITBOX ===")
+		print("Hitbox del jugador detectó: ", body.name)
+		print("Grupos del objeto: ", body.get_groups())
+		print("Tiene HealthComponent: ", body.has_node("HealthComponent"))
+		
+		if body.has_node("HealthComponent"):
+			print("¡Jugador golpeó a villano: ", body.name, " con daño: ", ATTACK_DAMAGE, "!")
+			body.get_node("HealthComponent").take_damage(ATTACK_DAMAGE, global_position)
+		else:
+			print("ERROR: El villano no tiene HealthComponent")
 
 func movement(delta: float, direction: Vector3, is_run_pressed: bool) -> void:
 	if state_machine.current_state == PlayerStateMachine.State.DANCING:
