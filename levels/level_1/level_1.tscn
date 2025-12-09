@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://ccuyw6trokxjl" path="res://levels/level_1/level_1_terrain.tscn" id="5_5b03i"]
 [ext_resource type="PackedScene" uid="uid://bq3ijt1sxibei" path="res://characters/villain/villain.tscn" id="6_e6u7d"]
 [ext_resource type="PackedScene" uid="uid://cmnujpwig5ob8" path="res://game_components/environment/platforms/grass_platform_01.tscn" id="6_mxc8w"]
-[ext_resource type="Script" uid="uid://dvepwov4km8uv" path="res://levels/level_1/level_1.gd" id="7_level1_script"]
+[ext_resource type="Script" uid="uid://buecramnr14re" path="res://levels/level_1/level_1.gd" id="7_level1_script"]
 [ext_resource type="PackedScene" uid="uid://dj2up8djpyavs" path="res://game_components/environment/fences/wooden_fence.tscn" id="7_mxc8w"]
 [ext_resource type="PackedScene" uid="uid://q8qwdd7rnawk" path="res://game_components/interactables/interactable.tscn" id="8_8jbay"]
 [ext_resource type="PackedScene" uid="uid://cd5vqgevfy0rp" path="res://game_components/collectables/collectable.tscn" id="8_j48du"]
@@ -118,19 +118,19 @@ transform = Transform3D(0.6570464, 0, 0.75385016, 0, 1, 0, -0.75385016, 0, 0.657
 [node name="VillainGroup1" type="Node3D" parent="Villains"]
 
 [node name="Villain4" parent="Villains/VillainGroup1" instance=ExtResource("6_e6u7d")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40.31423, 0.81669134, -15.175913)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40.31423, 1.4461509, -15.175913)
 speed = 10.0
 
 [node name="Villain5" parent="Villains/VillainGroup1" instance=ExtResource("6_e6u7d")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.949974, 0.8255913, -25.493858)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.949974, 1.455051, -25.493858)
 speed = 10.0
 
 [node name="Villain6" parent="Villains/VillainGroup1" instance=ExtResource("6_e6u7d")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 43.900078, 0.8212177, -19.947441)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 43.900078, 1.4506773, -19.947441)
 speed = 10.0
 
 [node name="Villain7" parent="Villains/VillainGroup1" instance=ExtResource("6_e6u7d")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.030632, 1.0275743, -21.615429)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.030632, 1.6570339, -21.615429)
 speed = 10.0
 
 [node name="VillainGroup2" type="Node3D" parent="Villains"]
@@ -173,6 +173,101 @@ speed = 10.0
 
 [node name="Villain14" parent="Villains/VillainGroup2" instance=ExtResource("6_e6u7d")]
 transform = Transform3D(-0.25881904, 0, 0.9659258, 0, 1, 0, -0.9659258, 0, -0.25881904, 8.1763315, 0.5014575, -13.696708)
+speed = 10.0
+
+[node name="VillainGroup3" type="Node3D" parent="Villains"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.042295, 6.518427, -37.76918)
+
+[node name="Villain15" parent="Villains/VillainGroup3" instance=ExtResource("6_e6u7d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40.253464, 3.003481, -15.199764)
+speed = 10.0
+
+[node name="Villain18" parent="Villains/VillainGroup3" instance=ExtResource("6_e6u7d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.922585, 2.5376215, -25.505764)
+speed = 10.0
+
+[node name="Villain16" parent="Villains/VillainGroup3" instance=ExtResource("6_e6u7d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 43.840874, 2.9927454, -19.966259)
+speed = 10.0
+
+[node name="Villain17" parent="Villains/VillainGroup3" instance=ExtResource("6_e6u7d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.997475, 2.544795, -21.62318)
+speed = 10.0
+
+[node name="VillainGroup4" type="Node3D" parent="Villains"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -13.866961, 6.0622997, -110.445724)
+
+[node name="Villain19" parent="Villains/VillainGroup4" instance=ExtResource("6_e6u7d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40.21997, 2.9325962, -15.175453)
+speed = 10.0
+
+[node name="Villain20" parent="Villains/VillainGroup4" instance=ExtResource("6_e6u7d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.70929, 3.8246346, -25.416855)
+speed = 10.0
+
+[node name="Villain21" parent="Villains/VillainGroup4" instance=ExtResource("6_e6u7d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 43.858803, 3.1077976, -19.9702)
+speed = 10.0
+
+[node name="Villain22" parent="Villains/VillainGroup4" instance=ExtResource("6_e6u7d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.91886, 2.9601097, -21.61052)
+speed = 10.0
+
+[node name="VillainGroup5" type="Node3D" parent="Villains"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.277225, -2.8519115, -137.00844)
+
+[node name="Villain23" parent="Villains/VillainGroup5" instance=ExtResource("6_e6u7d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40.26673, 3.381659, -15.205246)
+speed = 10.0
+
+[node name="Villain24" parent="Villains/VillainGroup5" instance=ExtResource("6_e6u7d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.86538, 3.3621106, -25.486328)
+speed = 10.0
+
+[node name="Villain25" parent="Villains/VillainGroup5" instance=ExtResource("6_e6u7d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 43.850594, 3.3369908, -19.97017)
+speed = 10.0
+
+[node name="Villain26" parent="Villains/VillainGroup5" instance=ExtResource("6_e6u7d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.98716, 3.4239836, -21.650528)
+speed = 10.0
+
+[node name="VillainGroup6" type="Node3D" parent="Villains"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -42.966717, 10.63064, -98.83411)
+
+[node name="Villain27" parent="Villains/VillainGroup6" instance=ExtResource("6_e6u7d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40.49893, 9.190996, -15.172211)
+speed = 10.0
+
+[node name="Villain28" parent="Villains/VillainGroup6" instance=ExtResource("6_e6u7d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 39.103832, 9.085867, -25.585518)
+speed = 10.0
+
+[node name="Villain29" parent="Villains/VillainGroup6" instance=ExtResource("6_e6u7d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 43.689545, 9.246067, -20.002968)
+speed = 10.0
+
+[node name="Villain30" parent="Villains/VillainGroup6" instance=ExtResource("6_e6u7d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.839058, 9.077539, -21.66169)
+speed = 10.0
+
+[node name="VillainGroup7" type="Node3D" parent="Villains"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -42.966717, 10.63064, -69.762146)
+
+[node name="Villain31" parent="Villains/VillainGroup7" instance=ExtResource("6_e6u7d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40.49893, 8.844851, -15.172211)
+speed = 10.0
+
+[node name="Villain32" parent="Villains/VillainGroup7" instance=ExtResource("6_e6u7d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 39.103832, 8.739721, -25.585533)
+speed = 10.0
+
+[node name="Villain33" parent="Villains/VillainGroup7" instance=ExtResource("6_e6u7d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 43.689545, 8.899921, -20.002968)
+speed = 10.0
+
+[node name="Villain34" parent="Villains/VillainGroup7" instance=ExtResource("6_e6u7d")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 37.839058, 8.731394, -21.661674)
 speed = 10.0
 
 [node name="Player" parent="." instance=ExtResource("2_45440")]
