@@ -76,7 +76,6 @@ func _ready() -> void:
 	add_child(health_component)
 	
 	# DEBUG: Ver qué métodos tiene HealthComponent
-	# DEBUG: Ver qué métodos tiene HealthComponent
 	print("=== DEBUG HealthComponent en Villano ===")
 	print("Métodos disponibles:")
 	var methods = health_component.get_method_list()
@@ -267,10 +266,24 @@ func _on_player_hitbox_area_body_exited(body: Node3D) -> void:
 		in_player_hitbox_area = false
 
 func _on_hurtbox_body_entered(body: Node3D) -> void:
-	if body.is_in_group("player") and has_node("HealthComponent"):
-		print("Villano ", name, ": Jugador entró en hurtbox - DAÑO RECIBIDO")
-		get_node("HealthComponent").take_damage(100, global_position)
-		print("¡Villano debería morir instantáneamente!")
+	if body.is_in_group("player"):
+		print("=== DEBUG VILLANO ===")
+		print("Villano ", name, ": Jugador entró en hurtbox")
+		print("Jugador está atacando: ", body.is_attacking() if body.has_method("is_attacking") else "No tiene método")
+		
+		if has_node("HealthComponent"):
+			# Verificar si el jugador está atacando
+			var is_player_attacking = false
+			if body.has_method("is_attacking"):
+				is_player_attacking = body.is_attacking()
+			
+			if is_player_attacking:
+				print("¡Villano ", name, ": GOLPEADO POR ATAQUE DEL JUGADOR!")
+				get_node("HealthComponent").take_damage(100, global_position)
+			else:
+				print("Villano ", name, ": Jugador en hurtbox pero NO está atacando - SIN DAÑO")
+		else:
+			print("ERROR: Villano no tiene HealthComponent")
 
 func _on_hitbox_body_entered(body: Node3D) -> void:
 	if body.is_in_group("player") and body.has_node("HealthComponent"):

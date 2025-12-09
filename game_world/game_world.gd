@@ -28,6 +28,8 @@ var game_finished = false
 var current_level_path: String = LEVEL_PATHS[LEVELS.MAIN_MENU]
 var current_level_id: LEVELS = LEVELS.MAIN_MENU
 
+signal level_loaded
+
 func _ready():
 	if not current_level_node:
 		push_error("current_level_node is null")
@@ -99,6 +101,8 @@ func load_level(level_path: String):
 		var player = level_instance.get_node_or_null("Player")
 		if player:
 			player.player_died.connect(Callable(self, "on_player_died"))
+		
+		level_loaded.emit()
 		
 		# Restaurar estado si es una restauración desde checkpoint
 		if is_checkpoint_restore:
