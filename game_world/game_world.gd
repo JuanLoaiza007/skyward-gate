@@ -2,24 +2,24 @@ extends Node3D
 
 enum LEVELS {
   MAIN_MENU,
-  LEVEL_0,
+  #LEVEL_0,
   LEVEL_1,
 }
 
 const LEVEL_PATHS: Dictionary = {
   LEVELS.MAIN_MENU: "res://ui/main_menu.tscn",
-  LEVELS.LEVEL_0: "res://levels/level_0/level_0.tscn",
+  #LEVELS.LEVEL_0: "res://levels/level_0/level_0.tscn",
   LEVELS.LEVEL_1: "res://levels/level_1/level_1.tscn",
 }
 
 const LEVEL_TRANSITIONS: Dictionary = {
-  LEVELS.LEVEL_0: LEVELS.LEVEL_1,
+  #LEVELS.LEVEL_0: LEVELS.LEVEL_1,
   LEVELS.LEVEL_1: null, # Fin del juego
 }
 
 @onready var current_level_node = $CurrentLevel
 
-@onready var victory_ui = $CanvasLayer/VictoryControl
+@onready var victory_ui = $CanvasLayer/VictoryUi
 @onready var death_ui = $CanvasLayer/DeathUI
 @onready var next_level_ui = $CanvasLayer/NextLevelUI
 
@@ -35,6 +35,10 @@ func _ready():
 		push_error("current_level_node is null")
 		return
 	hide_all_ui()
+	
+	if victory_ui:
+		victory_ui.main_menu_pressed.connect(_on_victory_main_menu_pressed)
+	
 	if next_level_ui:
 		next_level_ui.next_level_pressed.connect(_on_next_level_ui_pressed)
 		next_level_ui.main_menu_pressed.connect(_on_next_level_main_menu_pressed)
@@ -287,7 +291,7 @@ func go_to_main_menu():
 	load_level(LEVEL_PATHS[LEVELS.MAIN_MENU])
 
 func start_game():
-	load_level(LEVEL_PATHS[LEVELS.LEVEL_0])
+	load_level(LEVEL_PATHS[LEVELS.LEVEL_1])
 
 
 
@@ -295,7 +299,9 @@ func start_game():
 signal next_level(level_id)
 
 func victory():
-	if game_finished: return
+	if game_finished: 
+		return
+	
 	game_finished = true
 	var next_level = LEVEL_TRANSITIONS.get(current_level_id, null)
 	hide_all_ui()
@@ -303,18 +309,25 @@ func victory():
 	if next_level != null:
 		# Mostrar UI de siguiente nivel (nivel intermedio)
 		if next_level_ui:
-			next_level_ui.show_ui()  # Usar método del componente
+			next_level_ui.show_ui()
 	else:
-		# Mostrar UI de victoria final
+		# Mostrar UI de victoria final - Solo con botón de reinicio
 		if victory_ui:
-			victory_ui.visible = true
-			
+			victory_ui.show_ui()
+			print("GameWorld: Mostrando UI de victoria (solo reinicio)")
+	
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	var player = get_tree().get_nodes_in_group("player")[0]
 	player.game_finished = true
 	player.set_physics_process(false)
 	player.state_machine.update_state_forced(PlayerStateMachine.State.IDLE)
 
+func _on_victory_main_menu_pressed():
+	"""Ir al menú principal desde la pantalla de victoria"""
+	print("GameWorld: Volviendo al menú principal desde victoria")
+	game_finished = false
+	hide_all_ui()
+	go_to_main_menu()
 
 func _on_next_level_ui_pressed():
 	var next_level = LEVEL_TRANSITIONS.get(current_level_id, null)
