@@ -65,6 +65,48 @@ transform = Transform3D(0.25, 0, 0, 0, 0.625, 0, 0, 0, 0.25, 14.73262, 1.8965485
 [node name="grass_platform_05" parent="Platforms" instance=ExtResource("6_mxc8w")]
 transform = Transform3D(0.25, 0, 0, 0, 0.625, 0, 0, 0, 0.25, 18.257242, -0.10345149, -4.500987)
 
+[node name="grass_platform_10" parent="Platforms" instance=ExtResource("6_mxc8w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.4, -22.647573, 1.6601441, -144.72493)
+
+[node name="grass_platform_11" parent="Platforms" instance=ExtResource("6_mxc8w")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 0.4, -22.647573, 3.1585999, -139.45442)
+
+[node name="grass_platform_12" parent="Platforms" instance=ExtResource("6_mxc8w")]
+transform = Transform3D(-4.371139e-08, 0, 0.4, 0, 1, 0, -1, 0, -1.7484556e-08, -14.442503, 4.6867037, -137.5402)
+
+[node name="grass_platform_13" parent="Platforms" instance=ExtResource("6_mxc8w")]
+transform = Transform3D(-4.371139e-08, 0, 0.4, 0, 1, 0, -1, 0, -1.7484556e-08, -8.668394, 5.9240885, -133.6146)
+
+[node name="grass_platform_14" parent="Platforms" instance=ExtResource("6_mxc8w")]
+transform = Transform3D(-4.371139e-08, 0, 0.4, 0, 1, 0, -1, 0, -1.7484556e-08, 0.8046074, 8.439076, -132.5823)
+
+[node name="grass_platform_15" parent="Platforms" instance=ExtResource("6_mxc8w")]
+transform = Transform3D(-4.371139e-08, 0, 0.4, 0, 1, 0, -1, 0, -1.7484556e-08, 5.5309906, 9.524158, -131.23317)
+
+[node name="grass_platform_16" parent="Platforms" instance=ExtResource("6_mxc8w")]
+transform = Transform3D(0.70710677, 0, 0.28284273, 0, 1, 0, -0.70710677, 0, 0.28284273, 12.98849, 11.028945, -130.21576)
+
+[node name="grass_platform_17" parent="Platforms" instance=ExtResource("6_mxc8w")]
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.4, 12.352618, 14.611436, -120.55674)
+
+[node name="grass_platform_18" parent="Platforms" instance=ExtResource("6_mxc8w")]
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.4, 11.805192, 15.616526, -113.56914)
+
+[node name="grass_platform_19" parent="Platforms" instance=ExtResource("6_mxc8w")]
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.4, 11.283467, 16.488762, -106.79299)
+
+[node name="grass_platform_20" parent="Platforms" instance=ExtResource("6_mxc8w")]
+transform = Transform3D(-4.371139e-08, 0, 0.4, 0, 1, 0, -1, 0, -1.7484556e-08, 9.772551, 9.524158, -131.19081)
+
+[node name="grass_platform_21" parent="Platforms" instance=ExtResource("6_mxc8w")]
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.4, 12.352618, 12.973699, -126.041664)
+
+[node name="grass_platform_22" parent="Platforms" instance=ExtResource("6_mxc8w")]
+transform = Transform3D(-4.371139e-08, 0, 0.4, 0, 1, 0, -1, 0, -1.7484556e-08, -3.797055, 7.1837435, -133.6146)
+
+[node name="grass_platform_23" parent="Platforms" instance=ExtResource("6_mxc8w")]
+transform = Transform3D(0.99999994, 0, 0, 0, 1, 0, 0, 0, 0.4, 11.283467, 17.114094, -100.54225)
+
 [node name="HealthUI" parent="." instance=ExtResource("4_1ow6f")]
 
 [node name="Fences" type="Node3D" parent="."]
@@ -177,7 +219,7 @@ transform = Transform3D(-0.258819, 0, 0.9659258, 0, 1, 0, -0.9659258, 0, -0.2588
 speed = 10.0
 
 [node name="Villain3" parent="Villains/VillainGroup2" instance=ExtResource("6_e6u7d")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 4.607785, 0.63607985, -24.045595)
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 4.5884724, 0.9041003, -24.002172)
 speed = 10.0
 
 [node name="Villain8" parent="Villains/VillainGroup2" instance=ExtResource("6_e6u7d")]
@@ -185,27 +227,27 @@ transform = Transform3D(-0.18676414, 0, 0.98240477, 0, 1, 0, -0.98240477, 0, -0.
 speed = 10.0
 
 [node name="Villain9" parent="Villains/VillainGroup2" instance=ExtResource("6_e6u7d")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 11.220725, 0.5523335, -22.218498)
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 11.220725, 0.6080099, -22.218456)
 speed = 10.0
 
 [node name="Villain10" parent="Villains/VillainGroup2" instance=ExtResource("6_e6u7d")]
-transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.38439536, 0.5043107, -17.335922)
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0.38439527, 0.6036861, -17.33585)
 speed = 10.0
 
 [node name="Villain11" parent="Villains/VillainGroup2" instance=ExtResource("6_e6u7d")]
-transform = Transform3D(-0.17498872, 0, 0.98457044, 0, 1, 0, -0.98457044, 0, -0.17498872, 8.250521, 0.55233276, -22.80235)
+transform = Transform3D(-0.17498872, 0, 0.98457044, 0, 1, 0, -0.98457044, 0, -0.17498872, 8.25084, 0.6090669, -22.802843)
 speed = 10.0
 
 [node name="Villain12" parent="Villains/VillainGroup2" instance=ExtResource("6_e6u7d")]
-transform = Transform3D(-0.50000006, 0, 0.8660254, 0, 1, 0, -0.8660254, 0, -0.50000006, 12.858266, 0.50329673, -15.74792)
+transform = Transform3D(-0.50000006, 0, 0.8660254, 0, 1, 0, -0.8660254, 0, -0.50000006, 12.858266, 0.602686, -15.747846)
 speed = 10.0
 
 [node name="Villain13" parent="Villains/VillainGroup2" instance=ExtResource("6_e6u7d")]
-transform = Transform3D(-0.25881904, 0, 0.9659258, 0, 1, 0, -0.9659258, 0, -0.25881904, 9.309428, 0.50624925, -20.187714)
+transform = Transform3D(-0.25881904, 0, 0.9659258, 0, 1, 0, -0.9659258, 0, -0.25881904, 9.309428, 0.60576546, -20.187641)
 speed = 10.0
 
 [node name="Villain14" parent="Villains/VillainGroup2" instance=ExtResource("6_e6u7d")]
-transform = Transform3D(-0.25881904, 0, 0.9659258, 0, 1, 0, -0.9659258, 0, -0.25881904, 8.1763315, 0.5014575, -13.696708)
+transform = Transform3D(-0.25881904, 0, 0.9659258, 0, 1, 0, -0.9659258, 0, -0.25881904, 8.1763315, 0.6007469, -13.370082)
 speed = 10.0
 
 [node name="VillainGroup3" type="Node3D" parent="Villains"]
@@ -250,11 +292,11 @@ speed = 10.0
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.277225, -2.8519115, -137.00844)
 
 [node name="Villain23" parent="Villains/VillainGroup5" instance=ExtResource("6_e6u7d")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40.267174, 3.4010787, -17.771835)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40.213192, 3.68963, -17.859528)
 speed = 10.0
 
 [node name="Villain24" parent="Villains/VillainGroup5" instance=ExtResource("6_e6u7d")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.863205, 3.4175515, -23.260712)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38.842274, 3.950779, -23.274094)
 speed = 10.0
 
 [node name="VillainGroup6" type="Node3D" parent="Villains"]
