@@ -53,4 +53,3 @@ func _on_restart_pressed():
 
 func _on_main_menu_pressed():
 	get_node("/root/Main/GameWorld").go_to_main_menu()
-	print("holaaaaaaaa")

@@ -482,17 +482,13 @@ transform = Transform3D(-0.60916305, 0, -0.7930451, 0, 1, 0, 0.7930451, 0, -0.60
 speed = 10.0
 
 [node name="Villain7" parent="Villains/VillainGroupStairs1" instance=ExtResource("6_e6u7d")]
-transform = Transform3D(-0.60916305, 0, -0.7930451, 0, 1, 0, 0.7930451, 0, -0.60916305, -8.97257, 6.0937467, -135.27385)
+transform = Transform3D(-0.60916305, 0, -0.7930451, 0, 1, 0, 0.7930451, 0, -0.60916305, -3.4539933, 7.8297954, -135.27385)
 speed = 10.0
 
 [node name="VillainGroupStairs2" type="Node3D" parent="Villains"]
 
 [node name="Villain8" parent="Villains/VillainGroupStairs2" instance=ExtResource("6_e6u7d")]
-transform = Transform3D(-0.46470317, 0, -0.88546664, 0, 1, 0, 0.88546664, 0, -0.46470317, 0.24833119, 8.447056, -133.90605)
-speed = 10.0
-
-[node name="Villain9" parent="Villains/VillainGroupStairs2" instance=ExtResource("6_e6u7d")]
-transform = Transform3D(-0.115076035, 0, -0.9933567, 0, 1, 0, 0.9933567, 0, -0.115076035, 9.298344, 10.178927, -133.81255)
+transform = Transform3D(-0.46470317, 0, -0.88546664, 0, 1, 0, 0.88546664, 0, -0.46470317, 6.0062323, 9.872002, -133.90605)
 speed = 10.0
 
 [node name="Villain11" parent="Villains/VillainGroupStairs2" instance=ExtResource("6_e6u7d")]
@@ -508,7 +504,7 @@ transform = Transform3D(-0.9971806, 0.0442471, 0.060606044, 0.044165604, 0.99902
 speed = 10.0
 
 [node name="Player" parent="." instance=ExtResource("2_45440")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.066637516, 1.4472733, -1.7491164)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4, -1.7)
 
 [node name="Node3D" type="Node3D" parent="."]
 
@@ -707,7 +703,7 @@ text = "Sube los escalones para llegar a la batalla final.
 Consejo, recoge todos los diamantes posibles!"
 
 [node name="FinalBattleText" type="Label3D" parent="Texts"]
-transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 7.706049, 23.101616, -101.86568)
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 6.752038, 23.101616, -101.86568)
 pixel_size = 0.008
-text = "Sube los escalones para llegar a la batalla final.
-Consejo, recoge todos los diamantes posibles!"
+text = "Batalla final!
+Derrota el perro y recoge el cofre para ganar!"
