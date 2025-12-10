@@ -1,0 +1,93 @@
+[gd_scene load_steps=8 format=4 uid="uid://bkmjldq7lnnru"]
+
+[ext_resource type="Script" uid="uid://7wnd2xm75f72" path="res://game_components/interactables/button.gd" id="1_m2gr4"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4wku2"]
+resource_name = "Cuerpo"
+cull_mode = 2
+albedo_color = Color(0.47726798, 0.47726798, 0.47726798, 1)
+roughness = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hl4r4"]
+resource_name = "Botón"
+cull_mode = 2
+albedo_color = Color(0.90644574, 0, 0.037601244, 1)
+roughness = 0.5
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_gnary"]
+_surfaces = [{
+"aabb": AABB(-0.3188953, 0.0013194501, -0.3188953, 0.6377906, 2.1259687, 0.6377906),
+"format": 34896613377,
+"index_count": 78,
+"index_data": PackedByteArray("AAABAAIAAgABAAMAAgADAAQAAAAFAAEABgAFAAAABAAHAAYABgAHAAUABAADAAcABQAIAAEAAQAJAAMAAQAIAAkAAwAKAAcAAwAJAAoABwALAAUABQALAAgABwAKAAsADAAKAAkADQAIAAsADgALAAoADgANAAsADAAOAAoADQAPAAgADwAJAAgADgAPAA0ADwAMAAkADgAMAA8A"),
+"name": "Cuerpo",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 16,
+"vertex_data": PackedByteArray("3Tv//907AAAKBf//9PoAAN07//8hxAAA9Pr///T6AAAhxP//IcQAAAoF//8KBQAAIcT//907AAD0+v//CgUAAAAAe/7//wAA//97/v//AAD//3v+AAAAAAAAe/4AAAAA//8AAP//AAAAAAAAAAAAAP//AAAAAAAAAAAAAP//AAA=")
+}, {
+"aabb": AABB(-0.16974689, 2.127288, -0.16974689, 0.33949378, 0.051168203, 0.33949378),
+"format": 34359742465,
+"index_count": 30,
+"index_data": PackedByteArray("AAABAAIAAgABAAMAAgADAAQAAAAFAAEABgAFAAAABwADAAEABAADAAcABwABAAUABAAHAAYABgAHAAUA"),
+"name": "Botón",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 8,
+"vertex_data": PackedByteArray("IdItPn0lCEAh0i2+IdItPtRrC0Ah0i0+IdItPn0lCEAh0i0+IdItvtRrC0Ah0i0+IdItvn0lCEAh0i0+IdItPtRrC0Ah0i2+IdItvn0lCEAh0i2+IdItvtRrC0Ah0i2+")
+}]
+blend_shape_mode = 0
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_qjmdh"]
+resource_name = "button_Cube"
+_surfaces = [{
+"aabb": AABB(-0.3188953, 0.0013194501, -0.3188953, 0.6377906, 2.1259687, 0.6377906),
+"attribute_data": PackedByteArray("9q4IcUGhQkH2rvdOQaG8fkGhQkG83kJBB9H3TrzevH4H0QhxQaG8fv8f/3//X/8//1//f/8f/z//X/8/np8AAJ6f/z//XwAA/1///56f/7+en////1//v/9f/7+en/9/np//v/9f/3//n70+np8AAP+fQgGen/8/QaG8fp6f/z9BoUJBnp//f/+fvP6en/+//59BwZ6f////n7y+np//f/+fQoGen/+//1//f56f/z+en/9//1//Pw=="),
+"format": 34896613399,
+"index_count": 78,
+"index_data": PackedByteArray("AAABAAIAAAADAAEAAgAEAAUAAgAFAAYABgAFAAcABgAHAAgACAAJAAAACAAHAAkACgALAAwACgANAAsADgAPABAADgARAA8AEgATABQAEgAVABMAFgAXABgAFgAZABcAGgAbABwAGgAdABsAHgAfACAAHgAhAB8AIgAjACQAIgAlACMAJgAnACgAJgApACcAKgArACwAKgAtACsA"),
+"material": SubResource("StandardMaterial3D_4wku2"),
+"name": "Cuerpo",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 46,
+"vertex_data": PackedByteArray("3Tv//907/78KBf//9Pr/v907//8hxP+/CgX//woF/78KBf//9Pr/v/T6///0+v+/IcT//yHE/7/0+v//CgX/vyHE///dO/+/CgX//woF/7///wAAAAD//wAAAAD/////AAAAAAAA/////wAA/////wAAAAD///////97/v////8AAHv+////////AAD///////8AAP//VNX//3v+AABU1f//e/7//1TV//8AAAAAVNX//wAAAAD/vwAAe/4AAP+///97/gAA/78AAAAAAAD/vwoF///0+qrp//97/v//qun0+v//9Pqq6QAAe/7//6rpCgX//woF/MUAAHv+///8xQoF///0+vzFAAB7/gAA/MX0+v//9Pqq6f//e/4AAKrp9Pr//woFqun//3v+//+q6fT6//8KBfzFAAB7/gAA/MUKBf//CgX8xf//e/4AAPzFAAAAAAAAVNUAAHv+//9U1QAAe/4AAFTVAAAAAP//VNUAAP9/AAD/fwAA/38AAP9/AAD/fwAA/38AAP9/AAD/fwAA/38AAP9//3//v/9//7//f/+//3//v/+//7//v/+//7//v/+//79U1VTVVNVU1VTVVNVU1VTV//////////////////////pK+kr6SvpK+kr6SvpK+kr/HAFG/xwBRv8cAUb/HAFG+soI6vrKCOr6ygjq+soI6v8c/+L/HP/i/xz/4v8c/+KqKqoqqiqqKqoqqiqqKqoq")
+}, {
+"aabb": AABB(-0.16974689, 2.127288, -0.16974689, 0.33949378, 0.051168203, 0.33949378),
+"attribute_data": PackedByteArray("kwhRPyYR4j6TCFE/3O6dPpMIUT/c7p0+kwhRPyYR4j5t9y4/JhHiPpMIUT/c7p0+kwhRPyYR4j5t9y4/2u6dPpMIUT/c7p0+bfcuP9runT5t9y4/2u6dPpMIUT/c7p0+bfcuPyYR4j6TCFE/JhHiPpMIUT8mEeI+bfcuPyYR4j5t9y4/2u6dPm33Lj8mEeI+bfcuPyYR4j5t9y4/2u6dPg=="),
+"format": 34359742487,
+"index_count": 30,
+"index_data": PackedByteArray("AAABAAIAAAADAAEABAAFAAYABAAHAAUACAAJAAoACAALAAkADAANAA4ADAAPAA0AEAARABIAEAATABEA"),
+"material": SubResource("StandardMaterial3D_hl4r4"),
+"name": "Botón",
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 20,
+"vertex_data": PackedByteArray("IdItPn0lCEAh0i2+IdItPtRrC0Ah0i0+IdItPn0lCEAh0i0+IdItPtRrC0Ah0i2+IdItvtRrC0Ah0i2+IdItPtRrC0Ah0i0+IdItPtRrC0Ah0i2+IdItvtRrC0Ah0i0+IdItPn0lCEAh0i0+IdItvtRrC0Ah0i0+IdItvn0lCEAh0i0+IdItPtRrC0Ah0i0+IdItvn0lCEAh0i2+IdItPtRrC0Ah0i2+IdItPn0lCEAh0i2+IdItvtRrC0Ah0i2+IdItvn0lCEAh0i0+IdItvtRrC0Ah0i2+IdItvn0lCEAh0i2+IdItvtRrC0Ah0i0+AAD/f////78AAP9/////vwAA/3////+/AAD/f////7//fwAA////v/9/AAD///+//38AAP///7//fwAA////v/////////8//////////z//////////P/////////8//3//f////z//f/9/////P/9//3////8//3//f////z////9/////v////3////+/////f////7////9/////vw==")
+}]
+blend_shape_mode = 0
+shadow_mesh = SubResource("ArrayMesh_gnary")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_qjmdh"]
+size = Vector3(0.6503906, 2.1657715, 1)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_qjmdh"]
+height = 2.5
+radius = 1.5
+
+[node name="Button" type="StaticBody3D"]
+script = ExtResource("1_m2gr4")
+
+[node name="Cube" type="MeshInstance3D" parent="."]
+mesh = SubResource("ArrayMesh_qjmdh")
+skeleton = NodePath("")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0048828125, 1.0875244, 0)
+shape = SubResource("BoxShape3D_qjmdh")
+
+[node name="InteractionArea" type="Area3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="InteractionArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.25, 0)
+shape = SubResource("CylinderShape3D_qjmdh")

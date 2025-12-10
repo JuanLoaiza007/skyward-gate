@@ -1,69 +1,163 @@
 @tool
 extends CharacterBody3D
 
-enum VILLAIN { RAT }
+enum VillainType { RAT, DOG, COC }
 
 enum State { IDLE, WALKING, RETURNING, ATTACKING, ATTACKING_DELAY }
 
-@export var selected_villain: VILLAIN = VILLAIN.RAT
-@export var speed: float = 2.0
-
 const VILLAIN_SCENES = {
-	VILLAIN.RAT: preload("res://characters/villain/rat.tscn")
+	VillainType.RAT: preload("res://characters/villain/rat.tscn"),
+	VillainType.DOG: preload("res://characters/villain/dog.tscn"),
+	VillainType.COC: preload("res://characters/villain/coc.tscn")
 }
 
+const HealthComponent = preload("res://game_components/health/health_component.gd")
+
+@export var villain_type: VillainType = VillainType.RAT:
+	set(value):
+		villain_type = value
+		if Engine.is_editor_hint():
+			_update_villain()
+@export var speed: float = 5
+@export var max_health: int = 1  # Nueva propiedad para configurar salud
+
+func _update_villain() -> void:
+	# Remove existing villain instance
+	for child in get_children():
+		if child != $HitboxDelayTimmer:
+			child.queue_free()
+	# Instance the new villain
+	var villain_scene = VILLAIN_SCENES[villain_type].instantiate()
+	add_child(villain_scene)
+
+	# Reparent collision shape to the root for physics, or add default
+	if villain_scene.has_node("CollisionShape3D"):
+		var collision_shape = villain_scene.get_node("CollisionShape3D")
+		villain_scene.remove_child(collision_shape)
+		add_child(collision_shape)
+	else:
+		# Add default collision for villains without one (e.g., COC)
+		var default_shape = CapsuleShape3D.new()
+		default_shape.radius = 0.5
+		default_shape.height = 1.0
+		var default_collision = CollisionShape3D.new()
+		default_collision.shape = default_shape
+		add_child(default_collision)
+
 var vision_area: Area3D
-var attack_area: Area3D
-var damage_area: Area3D
-var rat_villain: Node3D
+var hitbox_area: Area3D
+var hurtbox_area: Area3D
 var vision_range: float
-var attack_range: float
+var hitbox_range: float
 
 var current_state: State = State.IDLE
 var initial_position: Vector3
 var target: Node3D = null
-var player_attack_area: Area3D = null
-var in_player_attack_area: bool = false
+var player_hitbox_area: Area3D = null
+var in_player_hitbox_area: bool = false
 var player_in_vision: bool = false
-var can_attack: bool = true
+var can_hitbox: bool = true
 const ATTACK_DELAY = 2.0
-var attack_delay_timer = null
-var is_attacking_delay: bool = false
+var hitbox_delay_timer = null
+var is_hitboxing_delay: bool = false
 
-signal villain_attacked(damage: int, target: Node3D)
+signal villain_hitboxed(hurtbox: int, target: Node3D)
 
 func _ready() -> void:
+	if Engine.is_editor_hint():
+		_update_villain()
+		return
+
 	add_to_group("villain")
+	
+	# Crear HealthComponent usando el script predefinido
+	var health_component = HealthComponent.new()
+	health_component.name = "HealthComponent"
+	add_child(health_component)
+	
+	# DEBUG: Ver qué métodos tiene HealthComponent
+	print("=== DEBUG HealthComponent en Villano ===")
+	print("Métodos disponibles:")
+	var methods = health_component.get_method_list()
+	for method in methods:
+		if method["name"] in ["set_health", "set_max_health", "take_damage"]:
+			print("  - ", method["name"])
+	
+	# Configurar salud usando métodos
+	if health_component.has_method("set_health"):
+		health_component.set_health(max_health)
+		print("Salud configurada a ", max_health, " usando set_health()")
+	else:
+		# Si no tiene set_health, intenta con call
+		health_component.call("set_health", max_health)
+		print("Salud configurada usando call()")
+	
 	initial_position = global_position
-	_update_villain()
+
+	# Instance the villain scene
+	var villain_scene = VILLAIN_SCENES[villain_type].instantiate()
+	add_child(villain_scene)
+
+	# Verify required nodes in the instanced scene
+	if not villain_scene.has_node("VisionArea"):
+		push_error("Villain must have a VisionArea node")
+		return
+	if not villain_scene.has_node("HitboxArea"):
+		push_error("Villain must have an HitboxArea node")
+		return
+	if not villain_scene.has_node("HurtboxArea"):
+		push_error("Villain must have a HurtboxArea node")
+		return
+
+	# Assign areas
+	vision_area = villain_scene.get_node("VisionArea")
+	hitbox_area = villain_scene.get_node("HitboxArea")
+	hurtbox_area = villain_scene.get_node("HurtboxArea")
+
 	vision_area.body_entered.connect(_on_vision_body_entered)
 	vision_area.body_exited.connect(_on_vision_body_exited)
+	hurtbox_area.body_entered.connect(_on_hurtbox_body_entered)
+	hitbox_area.body_entered.connect(_on_hitbox_body_entered)
 
-func _update_villain() -> void:
-	# Instanciar el villano seleccionado
-	rat_villain = VILLAIN_SCENES[selected_villain].instantiate()
-	add_child(rat_villain)
+	# Reparent collision shape to the root for physics, or add default
+	if villain_scene.has_node("CollisionShape3D"):
+		var collision_shape = villain_scene.get_node("CollisionShape3D")
+		villain_scene.remove_child(collision_shape)
+		add_child(collision_shape)
+	else:
+		push_error("Villain must have a CollisionShape3D node")
 
-	# Asignar áreas
-	vision_area = rat_villain.get_node("VisionArea")
-	attack_area = rat_villain.get_node("AttackArea")
-	damage_area = rat_villain.get_node("DamageArea")
-	damage_area.body_entered.connect(_on_damage_body_entered)
-
-	# Obtener rangos de las áreas
+	# Get ranges
 	var vision_shape = vision_area.get_child(0) as CollisionShape3D
 	if vision_shape and vision_shape.shape is SphereShape3D:
 		vision_range = vision_shape.shape.radius
 
-	var attack_shape = attack_area.get_child(0) as CollisionShape3D
-	if attack_shape and attack_shape.shape is SphereShape3D:
-		attack_range = attack_shape.shape.radius
+	var hitbox_shape = hitbox_area.get_child(0) as CollisionShape3D
+	if hitbox_shape and hitbox_shape.shape is SphereShape3D:
+		hitbox_range = hitbox_shape.shape.radius
+	
+	# Conectar señales para debug
+	var hc = get_node("HealthComponent")
+	if hc:
+		if hc.has_signal("health_changed"):
+			hc.health_changed.connect(_on_health_changed)
+		if hc.has_signal("damaged"):
+			hc.damaged.connect(_on_damaged)
+		if hc.has_signal("died"):
+			hc.died.connect(_on_died)
+	
+	print("Villano ", name, " inicializado. Salud esperada: ", max_health)
 
-	# Copiar collider del body
-	var body_collision = rat_villain.get_node("BodyCollision") as CollisionShape3D
-	if body_collision:
-		$CollisionShape3D.shape = body_collision.shape
-		$CollisionShape3D.transform = body_collision.transform
+func _on_health_changed(new_health: int):
+	print("Villano ", name, " - Salud cambiada: ", new_health, "/", max_health)
+
+func _on_damaged(amount: int, source_point: Vector3):
+	print("Villano ", name, " recibió ", amount, " de daño desde ", source_point)
+
+func _on_died():
+	print("Villano ", name, " ha muerto!")
+	# Aquí podrías agregar animación de muerte, sonido, etc.
+	queue_free()
 
 func _physics_process(delta: float) -> void:
 	# Aplicar gravedad
@@ -71,11 +165,11 @@ func _physics_process(delta: float) -> void:
 		velocity += get_gravity() * delta
 
 	# Forzar estado ATTACKING_DELAY si está en delay
-	if is_attacking_delay:
+	if is_hitboxing_delay:
 		current_state = State.ATTACKING_DELAY
 		velocity = Vector3.ZERO
-		if attack_delay_timer:
-			print("Attack delay time left: ", attack_delay_timer.time_left)
+		if hitbox_delay_timer:
+			print("Hitbox delay time left: ", hitbox_delay_timer.time_left)
 		return
 
 	match current_state:
@@ -86,7 +180,7 @@ func _physics_process(delta: float) -> void:
 		State.RETURNING:
 			_returning_behavior(delta)
 		State.ATTACKING:
-			_attacking_behavior(delta)
+			_hitboxing_behavior(delta)
 		State.ATTACKING_DELAY:
 			pass  # Handled above
 
@@ -103,8 +197,8 @@ func _walking_behavior(delta: float) -> void:
 		velocity.z = direction.z * speed
 		# Rotar solo en Y hacia el jugador
 		rotation.y = atan2(direction.x, direction.z)
-		# Check distance for attack
-		if global_position.distance_to(target.global_position) < attack_range:
+		# Check distance for hitbox
+		if global_position.distance_to(target.global_position) < hitbox_range:
 			current_state = State.ATTACKING
 	else:
 		current_state = State.RETURNING
@@ -122,11 +216,11 @@ func _returning_behavior(delta: float) -> void:
 		velocity = Vector3.ZERO
 		current_state = State.IDLE
 
-func _attacking_behavior(delta: float) -> void:
-	if can_attack and target and in_player_attack_area and target.has_node("HealthComponent") and target.get_node("HealthComponent").is_alive():
+func _hitboxing_behavior(delta: float) -> void:
+	if can_hitbox and target and in_player_hitbox_area and target.has_node("HealthComponent") and target.get_node("HealthComponent").is_alive():
 		target.get_node("HealthComponent").take_damage(1, global_position)
-		villain_attacked.emit(1, target)
-		can_attack = false
+		villain_hitboxed.emit(1, target)
+		can_hitbox = false
 
 		# Cortar visión durante el delay
 		vision_area.body_entered.disconnect(_on_vision_body_entered)
@@ -134,10 +228,10 @@ func _attacking_behavior(delta: float) -> void:
 		player_in_vision = false
 		target = null
 
-		is_attacking_delay = true
-		attack_delay_timer = $AttackDelayTimmer
-		attack_delay_timer.start(ATTACK_DELAY)
-		attack_delay_timer.timeout.connect(_on_attack_delay_timeout)
+		is_hitboxing_delay = true
+		hitbox_delay_timer = $HitboxDelayTimmer
+		hitbox_delay_timer.start(ATTACK_DELAY)
+		hitbox_delay_timer.timeout.connect(_on_hitbox_delay_timeout)
 		current_state = State.ATTACKING_DELAY
 	elif target and not target.get_node("HealthComponent").is_alive():
 		current_state = State.RETURNING
@@ -145,10 +239,10 @@ func _attacking_behavior(delta: float) -> void:
 func _on_vision_body_entered(body: Node3D) -> void:
 	if body.is_in_group("player"):
 		target = body
-		player_attack_area = target.get_node("AttackArea") as Area3D
-		if player_attack_area:
-			player_attack_area.body_entered.connect(_on_player_attack_area_body_entered)
-			player_attack_area.body_exited.connect(_on_player_attack_area_body_exited)
+		player_hitbox_area = target.get_node("HitboxArea") as Area3D
+		if player_hitbox_area:
+			player_hitbox_area.body_entered.connect(_on_player_hitbox_area_body_entered)
+			player_hitbox_area.body_exited.connect(_on_player_hitbox_area_body_exited)
 		player_in_vision = true
 		current_state = State.WALKING
 
@@ -156,29 +250,50 @@ func _on_vision_body_exited(body: Node3D) -> void:
 	if body.is_in_group("player"):
 		player_in_vision = false
 		target = null
-		if player_attack_area:
-			player_attack_area.body_entered.disconnect(_on_player_attack_area_body_entered)
-			player_attack_area.body_exited.disconnect(_on_player_attack_area_body_exited)
-		player_attack_area = null
-		in_player_attack_area = false
+		if player_hitbox_area:
+			player_hitbox_area.body_entered.disconnect(_on_player_hitbox_area_body_entered)
+			player_hitbox_area.body_exited.disconnect(_on_player_hitbox_area_body_exited)
+		player_hitbox_area = null
+		in_player_hitbox_area = false
 		current_state = State.RETURNING
 
-func _on_player_attack_area_body_entered(body: Node3D) -> void:
+func _on_player_hitbox_area_body_entered(body: Node3D) -> void:
 	if body == self:
-		in_player_attack_area = true
+		in_player_hitbox_area = true
 
-func _on_player_attack_area_body_exited(body: Node3D) -> void:
+func _on_player_hitbox_area_body_exited(body: Node3D) -> void:
 	if body == self:
-		in_player_attack_area = false
+		in_player_hitbox_area = false
 
-func _on_damage_body_entered(body: Node3D) -> void:
+func _on_hurtbox_body_entered(body: Node3D) -> void:
+	if body.is_in_group("player"):
+		print("=== DEBUG VILLANO ===")
+		print("Villano ", name, ": Jugador entró en hurtbox")
+		print("Jugador está atacando: ", body.is_attacking() if body.has_method("is_attacking") else "No tiene método")
+		
+		if has_node("HealthComponent"):
+			# Verificar si el jugador está atacando
+			var is_player_attacking = false
+			if body.has_method("is_attacking"):
+				is_player_attacking = body.is_attacking()
+			
+			if is_player_attacking:
+				print("¡Villano ", name, ": GOLPEADO POR ATAQUE DEL JUGADOR!")
+				get_node("HealthComponent").take_damage(100, global_position)
+			else:
+				print("Villano ", name, ": Jugador en hurtbox pero NO está atacando - SIN DAÑO")
+		else:
+			print("ERROR: Villano no tiene HealthComponent")
+
+func _on_hitbox_body_entered(body: Node3D) -> void:
 	if body.is_in_group("player") and body.has_node("HealthComponent"):
+		print("Villano ", name, ": Jugador golpeado por hitbox")
 		body.get_node("HealthComponent").take_damage(1, global_position)
 
-func _on_attack_delay_timeout() -> void:
-	is_attacking_delay = false
-	can_attack = true
-	attack_delay_timer = null
+func _on_hitbox_delay_timeout() -> void:
+	is_hitboxing_delay = false
+	can_hitbox = true
+	hitbox_delay_timer = null
 	# Restaurar visión
 	vision_area.body_entered.connect(_on_vision_body_entered)
 	vision_area.body_exited.connect(_on_vision_body_exited)
@@ -188,14 +303,14 @@ func _on_attack_delay_timeout() -> void:
 		if body.is_in_group("player"):
 			player_found = true
 			target = body
-			player_attack_area = target.get_node("AttackArea") as Area3D
-			if player_attack_area:
-				player_attack_area.body_entered.connect(_on_player_attack_area_body_entered)
-				player_attack_area.body_exited.connect(_on_player_attack_area_body_exited)
-				# Verificar si estamos en el AttackArea
-				for b in player_attack_area.get_overlapping_bodies():
+			player_hitbox_area = target.get_node("HitboxArea") as Area3D
+			if player_hitbox_area:
+				player_hitbox_area.body_entered.connect(_on_player_hitbox_area_body_entered)
+				player_hitbox_area.body_exited.connect(_on_player_hitbox_area_body_exited)
+				# Verificar si estamos en el HitboxArea
+				for b in player_hitbox_area.get_overlapping_bodies():
 					if b == self:
-						in_player_attack_area = true
+						in_player_hitbox_area = true
 						break
 			player_in_vision = true
 			break

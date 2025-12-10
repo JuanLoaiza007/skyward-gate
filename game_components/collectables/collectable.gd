@@ -33,6 +33,29 @@ func _ready() -> void:
 	interaction_area.body_entered.connect(_on_body_entered)
 	base_y = position.y
 	_update_mesh()
+	
+	# DEBUG: Mostrar información
+	print("Collectable ", name , "cargado, collected = {collected}")
+	
+	# Verificar si ya fue recolectado desde checkpoint
+	var checkpoint_data = CheckpointManager.get_checkpoint_data()
+	if checkpoint_data:
+		var current_level_path = get_node("/root/Main/GameWorld").current_level_path
+		if checkpoint_data.get("level_path", "") == current_level_path:
+			var unique_id = get_unique_id()
+			if CheckpointManager.is_item_collected(unique_id):
+				print("Collectable ", name , "debería estar recolectado según checkpoint")
+				mark_as_collected()
+
+func get_unique_id() -> String:
+	# Obtener ruta relativa al nivel actual
+	var game_world = get_node("/root/Main/GameWorld")
+	if game_world and game_world.current_level_node.get_child_count() > 0:
+		var current_level = game_world.current_level_node.get_child(0)
+		var relative_path = current_level.get_path_to(self)
+		return str(relative_path)
+	# Fallback
+	return name
 
 func _process(delta: float) -> void:
 	time_elapsed += delta
@@ -64,15 +87,45 @@ func _update_mesh() -> void:
 
 func _on_body_entered(body: Node3D) -> void:
 	if not collected and body.is_in_group("player"):
-		collected = true
-		# Ocultar el mesh visible
-		diamond_mesh.visible = false
-		# Actualizar estado del juego
-		GameStateManager.add_session_score(score_value)
-		GameStateManager.add_session_item(name + "_" + str(get_instance_id()))
-		# Reproducir sonido de recolección
-		audio_player.play()
-		# Esperar a que termine el sonido
-		await audio_player.finished
-		# Eliminar el objeto
-		queue_free()
+		collect()
+
+func collect():
+	collected = true
+	
+	# Ocultar el mesh visible
+	diamond_mesh.visible = false
+	
+	# Desactivar colisión
+	collision_shape.set_deferred("disabled", true)
+	
+	# Registrar en checkpoint manager
+	CheckpointManager.add_collected_item(get_path())
+
+	if selected_mesh == MESH.DIAMOND:
+		GameStateManager.add_diamond()
+	
+	# Actualizar estado del juego
+	GameStateManager.add_session_item(name + "_" + str(get_instance_id()))
+	
+	# Reproducir sonido de recolección
+	audio_player.play()
+	
+	# No eliminar el objeto, solo desactivar
+	# queue_free()
+
+func mark_as_collected():
+	collected = true
+	diamond_mesh.visible = false
+	# Asegurar que la colisión esté desactivada
+	if collision_shape:
+		collision_shape.set_deferred("disabled", true)
+	# También desactivar el área de interacción
+	if interaction_area:
+		interaction_area.monitoring = false
+		interaction_area.monitorable = false
+	
+	print("Collectable ", name , "marcado como recolectado")
+
+# Añadir al grupo "collectables"
+func _enter_tree():
+	add_to_group("collectables")

@@ -1,4 +1,4 @@
-# The Silent Protocol
+# Skyward Gate
 
 A 3D game project developed using the Godot game engine.
 

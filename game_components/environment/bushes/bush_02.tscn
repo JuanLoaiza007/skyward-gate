@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://de2ajs077da3n"]
+
+[ext_resource type="PackedScene" uid="uid://kc7qdj3mp6pj" path="res://assets/models/objects/bushes/bush_02.glb" id="1_q5hv1"]
+
+[node name="Bush02" instance=ExtResource("1_q5hv1")]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0)

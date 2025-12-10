@@ -1,8 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://bi6jeqml44w13"]
+[gd_scene load_steps=10 format=3 uid="uid://bi6jeqml44w13"]
 
 [ext_resource type="PackedScene" uid="uid://c5snqxgqbp4s1" path="res://characters/player/player.tscn" id="1_rup2k"]
-[ext_resource type="PackedScene" uid="uid://bq3ijt1sxibei" path="res://characters/villain/villain.tscn" id="2_pgvl5"]
 [ext_resource type="PackedScene" path="res://ui/health_ui.tscn" id="3_health_ui"]
+[ext_resource type="PackedScene" uid="uid://cnk7fnubffbht" path="res://game_components/items/treasure_chest.tscn" id="3_lm2rq"]
 
 [sub_resource type="GDScript" id="GDScript_rup2k"]
 script/source = "extends Node3D
@@ -11,8 +11,8 @@ const DEATH_HEIGHT = -50.0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	AudioManager.change_music(AudioManager.TRACKS.LOOP_STANDARD)
 	$Platform1/StaticBody3D.add_to_group(\"concrete_surface\")
-	$Platform2/StaticBody3D.add_to_group(\"grass_surface\")
 
 func _physics_process(delta: float) -> void:
 	var player = $Player
@@ -26,10 +26,6 @@ size = Vector3(15, 1, 15)
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_j57gt"]
 points = PackedVector3Array(-7.619047, -0.61904764, -7.619048, 7.619047, 0.57142854, 7.619048, 7.619047, -0.61904764, 7.619048, 7.619047, 0.57142854, -7.619048, -7.619047, 0.57142854, 7.619048, -7.619047, -0.61904764, 7.619048, 7.619047, -0.61904764, -7.619048, -7.619047, 0.57142854, -7.619048)
-
-[sub_resource type="CylinderMesh" id="CylinderMesh_rup2k"]
-
-[sub_resource type="CylinderShape3D" id="CylinderShape3D_rup2k"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_rup2k"]
 
@@ -52,20 +48,7 @@ mesh = SubResource("BoxMesh_j57gt")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Platform1/StaticBody3D"]
 shape = SubResource("ConvexPolygonShape3D_j57gt")
 
-[node name="Platform2" type="MeshInstance3D" parent="."]
-transform = Transform3D(3, 0, 0, 0, 0.2, 0, 0, 0, 3, 0, 0.53058624, 0)
-mesh = SubResource("CylinderMesh_rup2k")
-
-[node name="StaticBody3D" type="StaticBody3D" parent="Platform2"]
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Platform2/StaticBody3D"]
-shape = SubResource("CylinderShape3D_rup2k")
-
-[node name="Player" parent="." instance=ExtResource("1_rup2k")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.2971659, 2.8476198, 2.6798615)
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.0201867, 2.2895575, 6.81603)
+[node name="HealthUI" parent="." instance=ExtResource("3_health_ui")]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_lm2rq")
@@ -73,7 +56,8 @@ environment = SubResource("Environment_lm2rq")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 12.447183, 0)
 
-[node name="HealthUI" parent="." instance=ExtResource("3_health_ui")]
+[node name="Player" parent="." instance=ExtResource("1_rup2k")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.015908241, 1.832124, 5.0235786)
 
-[node name="Villain" parent="." instance=ExtResource("2_pgvl5")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.5573325, 0.6266435, 1.5486636)
+[node name="TreasureChest" parent="." instance=ExtResource("3_lm2rq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5335798, 0.57311094, -5.1341476)
