@@ -2,18 +2,18 @@ extends Node3D
 
 enum LEVELS {
   MAIN_MENU,
-  LEVEL_0,
+  #LEVEL_0,
   LEVEL_1,
 }
 
 const LEVEL_PATHS: Dictionary = {
   LEVELS.MAIN_MENU: "res://ui/main_menu.tscn",
-  LEVELS.LEVEL_0: "res://levels/level_0/level_0.tscn",
+  #LEVELS.LEVEL_0: "res://levels/level_0/level_0.tscn",
   LEVELS.LEVEL_1: "res://levels/level_1/level_1.tscn",
 }
 
 const LEVEL_TRANSITIONS: Dictionary = {
-  LEVELS.LEVEL_0: LEVELS.LEVEL_1,
+  #LEVELS.LEVEL_0: LEVELS.LEVEL_1,
   LEVELS.LEVEL_1: null, # Fin del juego
 }
 
@@ -287,7 +287,7 @@ func go_to_main_menu():
 	load_level(LEVEL_PATHS[LEVELS.MAIN_MENU])
 
 func start_game():
-	load_level(LEVEL_PATHS[LEVELS.LEVEL_0])
+	load_level(LEVEL_PATHS[LEVELS.LEVEL_1])
 
 
 
